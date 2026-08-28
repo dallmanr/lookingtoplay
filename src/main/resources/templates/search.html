@@ -70,19 +70,19 @@
     <main class="container py-4">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
 
-            <div class="col" th:each="game : ${games}">
+            <div class="col" th:each="response : ${response}">
                 <div class="card h-100 shadow-sm">
-                    <img th:src="@{'/images/' + ${game.cover}}"
-                         class="card-img-top"
-                         alt="Card image"
-                         loading="lazy">
+<!--                    <img th:src="@{'/images/' + ${game.cover}}"-->
+<!--                         class="card-img-top"-->
+<!--                         alt="Card image"-->
+<!--                         loading="lazy">-->
 
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${game.name}">
+                        <h5 class="card-title" th:text="${response.name}">
                             Game name
                         </h5>
 
-                        <p class="card-text" th:text="${game.summary}">
+                        <p class="card-text" th:text="${response.summary}">
                             Game summary
                         </p>
                     </div>
