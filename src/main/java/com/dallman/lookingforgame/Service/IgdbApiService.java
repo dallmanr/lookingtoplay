@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -32,7 +33,7 @@ public class IgdbApiService {
     public IgdbResponse searchGameName(String gameName) {
         String token = igdbOAuthClient.getAccessToken();
 
-        String bodyParms = String.format("search \"%s\"; fields name, summary, platforms;", gameName.replace("\"", "\\\""));
+        String bodyParms = String.format("search \"%s\"; fields name, summary;", gameName.replace("\"", "\\\""));
 
         List<IgdbGame> games = webClient.post()
                 .uri(igdbApiProperties.getBaseUrl())
@@ -58,8 +59,8 @@ public class IgdbApiService {
                 String.valueOf(game.id()),
                 game.name(),
                 game.summary(),
-                formatReleaseDate(game.released()),
-                extractPlatformNames(game.platforms())
+                LocalDate.now().toString(),
+                "PC"
         );
     }
 
