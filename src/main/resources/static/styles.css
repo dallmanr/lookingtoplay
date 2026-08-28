@@ -1,0 +1,104 @@
+
+        /* Top section - 10% of viewport height */
+        .top-section {
+            height: 10vh;
+            background-color: #f8f9fa;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Search bar container */
+        .search-container {
+            flex: 1;
+            max-width: 60%;
+        }
+
+        /* Search bar styles */
+        .search-bar {
+            width: 100%;
+            border-radius: 25px;
+            padding: 0.75rem 1.5rem;
+        }
+
+        /* Profile button - circular */
+        .profile-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background-color: #6d4aff;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .profile-btn:hover {
+            background-color: #5a40d9;
+        }
+
+        /* Profile dropdown positioning */
+        .dropdown-menu-end {
+            right: 0;
+            left: auto;
+        }
+
+        /* Main content area */
+        .main-content {
+            padding: 2rem;
+        }
+
+        /* Card container with 5-card grid */
+        .card-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 0 -0.5rem;
+        }
+
+        .card-item {
+            flex: 0 0 calc(20% - 1rem);
+            max-width: calc(20% - 1rem);
+        }
+
+        /* Responsive breakpoints */
+        @media (max-width: 1200px) {
+            .card-item {
+                flex: 0 0 calc(25% - 1rem);
+                max-width: calc(25% - 1rem);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .card-item {
+                flex: 0 0 calc(33.333% - 1rem);
+                max-width: calc(33.333% - 1rem);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .card-item {
+                flex: 0 0 calc(50% - 1rem);
+                max-width: calc(50% - 1rem);
+            }
+            
+            .top-section {
+                flex-direction: column;
+                height: auto;
+                padding: 1rem;
+            }
+            
+            .search-container {
+                max-width: 100%;
+                margin-bottom: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .card-item {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }

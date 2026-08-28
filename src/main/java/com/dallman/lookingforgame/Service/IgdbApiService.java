@@ -32,8 +32,7 @@ public class IgdbApiService {
     public IgdbResponse searchGameName(String gameName) {
         String token = igdbOAuthClient.getAccessToken();
 
-        String bodyParms = String.format("search \"Rival Species\"; " +
-                "fields name;");
+        String bodyParms = String.format("search \"%s\"; fields name, summary, platforms;", gameName.replace("\"", "\\\""));
 
         List<IgdbGame> games = webClient.post()
                 .uri(igdbApiProperties.getBaseUrl())
