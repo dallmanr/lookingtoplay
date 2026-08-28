@@ -1,6 +1,5 @@
 package com.dallman.lookingforgame;
 
-import com.dallman.lookingforgame.DTO.IgdbGame;
 import com.dallman.lookingforgame.DTO.IgdbResponse;
 import com.dallman.lookingforgame.Service.IgdbApiService;
 import com.dallman.lookingforgame.Service.IgdbOAuthClient;

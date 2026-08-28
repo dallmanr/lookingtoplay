@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="games")
+@Table(name="game")
 public class Game {
 
     @Id
@@ -17,12 +17,16 @@ public class Game {
     @Column(name="name")
     private String name;
 
-    private int cover;
+    @Column(name="cover")
+    private String cover;
 
+    @Column(name="summary")
     private String summary;
 
+    @Column(name="url")
     private String url;
 
+    @Column(name="game_type")
     private int gameType;
 
 //    private List<Platform> platforms;
@@ -31,14 +35,12 @@ public class Game {
     public Game() {
     }
 
-    public Game(int id, String name, int cover, String summary, String url, int gameType) {
-        this.id = id;
+    public Game(String name, String cover, String summary, String url, int gameType) {
         this.name = name;
         this.cover = cover;
         this.summary = summary;
         this.url = url;
         this.gameType = gameType;
-//        this.platforms = platforms;
     }
 
     public int getId() {
@@ -57,11 +59,11 @@ public class Game {
         this.name = name;
     }
 
-    public int getCover() {
+    public String getCover() {
         return cover;
     }
 
-    public void setCover(int cover) {
+    public void setCover(String cover) {
         this.cover = cover;
     }
 
@@ -94,7 +96,10 @@ public class Game {
         return "Game{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", cover=" + cover +
+                ", cover='" + cover + '\'' +
+                ", summary='" + summary + '\'' +
+                ", url='" + url + '\'' +
+                ", gameType=" + gameType +
                 '}';
     }
 }
