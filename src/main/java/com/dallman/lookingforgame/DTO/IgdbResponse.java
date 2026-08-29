@@ -1,7 +1,5 @@
 package com.dallman.lookingforgame.DTO;
 
-import com.dallman.lookingforgame.Game.Platform;
-
 import java.util.List;
 
 public record IgdbResponse(

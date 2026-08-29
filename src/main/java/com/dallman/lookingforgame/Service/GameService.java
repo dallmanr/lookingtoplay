@@ -1,7 +1,10 @@
 package com.dallman.lookingforgame.Service;
 
+import com.dallman.lookingforgame.Exception.GameControllerExceptionHandler;
+import com.dallman.lookingforgame.Exception.GameNotFoundException;
 import com.dallman.lookingforgame.Game.Game;
 import com.dallman.lookingforgame.Repository.GameRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,9 +26,9 @@ public class GameService {
 //        return gameRepository.findGameByPlatformId(platformId);
 //    }
 
-    public Game findByName(String name) {
-        Game theGame = gameRepository.findGameByName(name);
-        return theGame;
+    public List<Game> findByName(String name) {
+        List<Game> games = gameRepository.findGameByNameIgnoreCase(name);
+        return games;
     }
 
     public List<Game> findAll() {

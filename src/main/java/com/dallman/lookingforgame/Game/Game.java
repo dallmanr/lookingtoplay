@@ -2,8 +2,7 @@ package com.dallman.lookingforgame.Game;
 
 
 import jakarta.persistence.*;
-
-import java.util.List;
+import org.antlr.v4.runtime.misc.NotNull;
 
 @Entity
 @Table(name="game")
@@ -15,6 +14,7 @@ public class Game {
     private int id;
 
     @Column(name="name")
+    @NotNull
     private String name;
 
     @Column(name="cover")

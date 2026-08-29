@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface GameRepository extends JpaRepository<Game, Integer> {
 
-    Game findGameByName(String name);
+    List<Game> findGameByNameIgnoreCase(String name);
 
     List<Game> findAll();
 

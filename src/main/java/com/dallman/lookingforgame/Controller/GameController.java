@@ -6,9 +6,10 @@ import com.dallman.lookingforgame.Service.GameService;
 import com.dallman.lookingforgame.Service.IgdbApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -31,13 +32,20 @@ public class GameController {
         return "index";
     }
 
-    @GetMapping("/search")
+    @GetMapping("/addnewgame")
     public String search(@RequestParam(name="name") String name, Model model) {
         List<IgdbResponse> response = igdbApiService.searchGameName(name);
         System.out.println("game name " + name);
         System.out.println("response " + response);
         model.addAttribute("response", response);
-        return "search";
+        return "newgamesearch";
+    }
+
+    @GetMapping("/search")
+    public String search(Model model, @RequestParam(name="name") String name) {
+        List<Game> games = gameService.findByName(name);
+        model.addAttribute("games", games);
+        return "index";
     }
 
 }

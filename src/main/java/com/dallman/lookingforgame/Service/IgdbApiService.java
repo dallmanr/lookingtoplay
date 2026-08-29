@@ -1,6 +1,5 @@
 package com.dallman.lookingforgame.Service;
 
-import com.dallman.lookingforgame.DTO.IgdbPlatform;
 import com.dallman.lookingforgame.DTO.IgdbResponse;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -10,13 +9,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class IgdbApiService {
