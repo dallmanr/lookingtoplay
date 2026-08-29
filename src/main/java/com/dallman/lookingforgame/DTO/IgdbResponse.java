@@ -9,6 +9,6 @@ public record IgdbResponse(
         String name,
         String summary,
         String releaseDate,  // Changed from Long to String
-        String platforms
+        List<Integer> platforms
 ) {}
 

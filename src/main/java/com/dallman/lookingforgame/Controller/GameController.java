@@ -33,7 +33,7 @@ public class GameController {
 
     @GetMapping("/search")
     public String search(@RequestParam(name="name") String name, Model model) {
-        IgdbResponse response = igdbApiService.searchGameName(name);
+        List<IgdbResponse> response = igdbApiService.searchGameName(name);
         System.out.println("game name " + name);
         System.out.println("response " + response);
         model.addAttribute("response", response);

@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
@@ -24,10 +26,10 @@ public class IgdbApiIntegrationTest {
         String accessToken = igdbOAuthClient.getAccessToken();
         System.out.println("Token obtained: " + accessToken.substring(0,10));
 
-        IgdbResponse game = igdbApiService.searchGameName("Rival Species");
+        List<IgdbResponse> game = igdbApiService.searchGameName("Rival Species");
 
         assertNotNull(game);
-        assert(game.name().length() > 0);
-        System.out.println("Found game: " + game.name());
+        assert(game.getFirst().name().length() > 0);
+        System.out.println("Found game: " + game.getFirst().name());
     }
 }

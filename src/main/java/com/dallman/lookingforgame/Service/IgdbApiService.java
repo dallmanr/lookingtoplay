@@ -1,6 +1,5 @@
 package com.dallman.lookingforgame.Service;
 
-import com.dallman.lookingforgame.DTO.IgdbGame;
 import com.dallman.lookingforgame.DTO.IgdbPlatform;
 import com.dallman.lookingforgame.DTO.IgdbResponse;
 import org.springframework.core.ParameterizedTypeReference;
@@ -14,6 +13,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,12 +31,13 @@ public class IgdbApiService {
         this.igdbOAuthClient = igdpOAuthClient;
     }
 
-    public IgdbResponse searchGameName(String gameName) {
+    public List<IgdbResponse> searchGameName(String gameName) {
         String token = igdbOAuthClient.getAccessToken();
 
-        String bodyParms = String.format("search \"%s\"; fields name, summary;", gameName.replace("\"", "\\\""));
+        String bodyParms = String.format("search \"%s\"; fields name, summary, platforms, cover, first_release_date;",
+                gameName.replace("\"", "\\\""));
 
-        List<IgdbGame> games = webClient.post()
+        List<IgdbResponse> games = webClient.post()
                 .uri(igdbApiProperties.getBaseUrl())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .header("Client-ID", igdbApiProperties.getClientId())
@@ -47,21 +49,14 @@ public class IgdbApiService {
                         (ClientResponse response) -> Mono.error(new RuntimeException(
                                 "IGDB API error: " + response.statusCode()))
                 )
-                .bodyToMono(new ParameterizedTypeReference<List<IgdbGame>>() {})
+                .bodyToMono(new ParameterizedTypeReference<List<IgdbResponse>>() {})
                 .block();
 
         if (games == null || games.isEmpty()) {
             throw new RuntimeException("No games found matching: " + gameName);
         }
 
-        IgdbGame game = games.getFirst();
-        return new IgdbResponse(
-                String.valueOf(game.id()),
-                game.name(),
-                game.summary(),
-                LocalDate.now().toString(),
-                "PC"
-        );
+        return games;
     }
 
     private String formatReleaseDate(Long unixTimestamp) {
@@ -72,13 +67,13 @@ public class IgdbApiService {
                 .format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
-    private String extractPlatformNames(List<IgdbPlatform> platforms) {
-        if (platforms == null || platforms.isEmpty()) {
-            return "";
-        }
-        return platforms.stream()
-                .map(IgdbPlatform::name)
-                .filter(n -> n != null)
-                .collect(Collectors.joining(", "));
-    }
+//    private String extractPlatformNames(IgdbPlatform[] platforms) {
+//        if (platforms == null || platforms.length == 0) {
+//            return null;
+//        }
+//        return platforms.stream()
+//                .map(IgdbPlatform::name)
+//                .filter(n -> n != null)
+//                .collect(Collectors.joining(", "));
+//    }
 }

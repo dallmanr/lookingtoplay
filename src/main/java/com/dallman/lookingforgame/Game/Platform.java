@@ -13,9 +13,12 @@ public class Platform {
 
     private int platformId;
 
-    public Platform(int id, int platformId) {
+    public Platform(int platformId) {
         this.id = id;
         this.platformId = platformId;
+    }
+
+    public Platform() {
     }
 
     public int getId() {
