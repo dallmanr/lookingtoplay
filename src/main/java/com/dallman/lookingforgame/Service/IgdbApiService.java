@@ -1,6 +1,7 @@
 package com.dallman.lookingforgame.Service;
 
 import com.dallman.lookingforgame.DTO.IgdbResponse;
+import com.dallman.lookingforgame.Exception.GameNotFoundException;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class IgdbApiService {
                 .block();
 
         if (games == null || games.isEmpty()) {
-            throw new RuntimeException("No games found matching: " + gameName);
+            throw new GameNotFoundException("No games found matching: " + gameName);
         }
 
         return games;

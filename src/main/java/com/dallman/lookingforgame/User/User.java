@@ -19,13 +19,17 @@ public class User {
     @Column(name = "enabled")
     private int enabled;
 
+    @Column(name="email_address")
+    private String emailAddress;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Collection<Authority> roles;
 
-    public User(String username, String password, int enabled) {
+    public User(String username, String password, int enabled, String emailAddress) {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
+        this.emailAddress = emailAddress;
     }
 
     public User(String username, String password, int enabled, Collection<Authority> roles) {
