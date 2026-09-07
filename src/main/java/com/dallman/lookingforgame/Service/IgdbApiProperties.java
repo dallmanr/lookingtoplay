@@ -12,6 +12,8 @@ public class IgdbApiProperties {
     private String clientSecret;
     private String authEndPoint;
     private String tokenEndPoint;
+    private String gamesEndPoint;
+    private String platformEndPoint;
 
     public String getBaseUrl() {
         return baseUrl;

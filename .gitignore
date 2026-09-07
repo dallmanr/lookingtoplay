@@ -33,5 +33,7 @@ build/
 .vscode/
 
 ### CUSTOM ###
-application.properties
 images/
+.env
+.env.*
+!.env.example
