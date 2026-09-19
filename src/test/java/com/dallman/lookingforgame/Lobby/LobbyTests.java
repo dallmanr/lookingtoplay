@@ -61,6 +61,6 @@ public class LobbyTests {
     @Test
     @DisplayName("Own no more than 1 lobby")
     void ownNoMoreThanOneLobby() {
-        
+
     }
 }
