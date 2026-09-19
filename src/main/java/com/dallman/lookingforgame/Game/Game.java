@@ -1,8 +1,11 @@
 package com.dallman.lookingforgame.Game;
 
 
+import com.dallman.lookingforgame.Lobby.Lobby;
 import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
+
+import java.util.List;
 
 @Entity
 @Table(name="game")
@@ -29,10 +32,20 @@ public class Game {
     @Column(name="game_type")
     private int gameType;
 
+    @OneToMany(mappedBy = "game")
+    private List<Lobby> lobbies;
+
 //    private List<Platform> platforms;
 
 
     public Game() {
+    }
+
+    public Game(String name, String summary, String url, int gameType) {
+        this.name = name;
+        this.summary = summary;
+        this.url = url;
+        this.gameType = gameType;
     }
 
     public Game(String name, String cover, String summary, String url, int gameType) {
