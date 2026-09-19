@@ -1,4 +1,4 @@
-package com.dallman.lookingtoplay.Lobby;
+package com.dallman.lookingtoplay.Game;
 
 
 import org.springframework.boot.test.context.SpringBootTest;
