@@ -18,21 +18,39 @@ public class Lobby {
     @Column(name="name", nullable = false)
     private String name;
 
+    /*
+     * There are many lobbies to one owner, an owner will have historical lobbies but only one that is currently OPEN
+     * We do not cascade DELETE because a lobby owner deleting a lobby should not delete their account.
+     * Use Lazy loading because whilst they may only have 1 currently OPEN lobby, they may have a large amount of historical ones
+    */
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,  CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name="owner_id")
     private User userOwner;
 
+    /*
+     * A lobby can have many users, who are not owners, and owners can have many lobbies, including historical ones.
+     * We do not cascade DELETE because if a lobby is deleted, the players who joined should NOT be deleted.
+     * A set means no duplicates so a user cannot join the same lobby > once
+    */
     @ManyToMany(cascade = {CascadeType.PERSIST,  CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="lobby_user",
             joinColumns = @JoinColumn(name="lobby_id"),
             inverseJoinColumns = @JoinColumn(name="user_id"))
-    // A set means no duplicates
     private Set<User> players;
 
+    /*
+    * There can be many lobbies to one game as other users can create their own instances
+    * A lobby is only ever for one game.
+    * Use LAZY load because we don't want to retrieve all historical lobbies
+    * Do not cascade DELETE because deleting a lobby should not delete the game
+    * */
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,  CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name="game_id")
     private Game game;
 
+    /*
+    * Only valid statuses are: OPEN, CLOSED, IN_PROGRESS
+    * */
     @Enumerated(EnumType.STRING)
     @Column(name="status", nullable=false)
     private LobbyStatus lobbyStatus;
