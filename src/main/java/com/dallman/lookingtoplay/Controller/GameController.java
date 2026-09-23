@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.thymeleaf.model.IModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +35,6 @@ public class GameController {
         return "index";
     }
 
-    @GetMapping("/addnewgame")
-    public String search(@RequestParam(name="name") String name, Model model) {
-        List<IgdbResponse> response = igdbClient.searchGameName(name);
-        System.out.println("game name " + name);
-        System.out.println("response " + response);
-        model.addAttribute("response", response);
-        return "addnewgame";
-    }
-
     @GetMapping("/search")
     public String search(Model model, @RequestParam(name="name") String name) {
         List<Game> games = gameService.findByName(name);
@@ -51,6 +44,25 @@ public class GameController {
             model.addAttribute("games", games);
         }
         return "searchgame";
+    }
+
+    @GetMapping("/addnewgame")
+    public String search(@RequestParam(name="name") String name, Model model) {
+        List<IgdbResponse> response = igdbClient.searchGameName(name);
+        System.out.println("game name " + name);
+        System.out.println("response " + response);
+        model.addAttribute("response", response);
+        return "addnewgame";
+    }
+
+    @GetMapping("/gamedetails")
+    public String viewGameDetails(@RequestParam(name="id") int id, Model model) {
+        // Call the API again, this time using the game ID and display the results
+        System.out.println("game id " + id);
+        IgdbResponse igdbResponse = igdbClient.findById(id);
+        System.out.println(igdbResponse);
+        model.addAttribute("igdbResponse", igdbResponse);
+        return "gamedetails";
     }
 
 }

@@ -90,6 +90,7 @@
                 <!--                         loading="lazy">-->
 
                 <div class="card-body">
+                    <input type="hidden" th:value="${response.id}" name="id">
                     <h5 class="card-title" th:text="${response.name}">
                         Game name
                     </h5>
@@ -99,7 +100,10 @@
                     </p>
                 </div>
                 <div class="card-footer bg-transparent">
-                    <a href="#" class="btn btn-outline-primary btn-sm">View</a>
+                    <form class="d-flex" th:action="@{/gamedetails}" method="get">
+                        <input type="hidden" th:value="${response.id}" name="id">
+                        <button type="submit" class="btn btn-primary ms-2">View</button>
+                    </form>
                 </div>
             </div>
         </div>

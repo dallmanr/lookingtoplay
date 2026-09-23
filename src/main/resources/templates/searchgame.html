@@ -81,7 +81,7 @@
         <div th:case="'0'" class="center-text-container">Game not found
             <form class="d-flex" th:action="@{/addnewgame}" method="get">
                 <input type="hidden" name="name" th:value="${param.name}">
-                <button type="submit" class="btn btn-primary ms-2">Search IGDB
+                <button type="submit" class="btn btn-primary ms-2">Add Game
                 </button>
             </form>
         </div>
@@ -94,6 +94,7 @@
                     <!--                         loading="lazy">-->
 
                     <div class="card-body">
+                        <input type="hidden" th:value="${response.id}" name="id">
                         <h5 class="card-title" th:text="${response.name}">
                             Game name
                         </h5>

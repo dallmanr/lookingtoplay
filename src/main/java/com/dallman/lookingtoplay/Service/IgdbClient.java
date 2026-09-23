@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -46,7 +47,8 @@ public class IgdbClient {
                         (ClientResponse response) -> Mono.error(new RuntimeException(
                                 "IGDB API error: " + response.statusCode()))
                 )
-                .bodyToMono(new ParameterizedTypeReference<List<IgdbResponse>>() {})
+                .bodyToMono(new ParameterizedTypeReference<List<IgdbResponse>>() {
+                })
                 .block();
 
         if (games == null || games.isEmpty()) {
@@ -56,15 +58,7 @@ public class IgdbClient {
         return games;
     }
 
-    private String formatReleaseDate(Long unixTimestamp) {
-        if (unixTimestamp == null || unixTimestamp == 0) {
-            return "Unknown";
-        }
-        return Instant.ofEpochSecond(unixTimestamp).atZone(ZoneId.systemDefault())
-                .format(DateTimeFormatter.ISO_LOCAL_DATE);
-    }
-
-//    private String extractPlatformNames(IgdbPlatform[] platforms) {
+    //    private String extractPlatformNames(IgdbPlatform[] platforms) {
 //        if (platforms == null || platforms.length == 0) {
 //            return null;
 //        }
@@ -73,4 +67,38 @@ public class IgdbClient {
 //                .filter(n -> n != null)
 //                .collect(Collectors.joining(", "));
 //    }
+    public IgdbResponse findById(int id) {
+        String token = igdbOAuthClient.getAccessToken();
+
+        String bodyParms = String.format("fields name, summary, platforms, cover, first_release_date; where id = %d;", id);
+
+        List<IgdbResponse> igdbResponse = webClient.post()
+                .uri(igdbApiProperties.getBaseUrl())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .header("Client-ID", igdbApiProperties.getClientId())
+                .header("Accept", "application/json")
+                .bodyValue(bodyParms)
+                .retrieve()
+                .onStatus(
+                        (HttpStatusCode status) -> status.isError(),
+                        (ClientResponse response) -> Mono.error(new RuntimeException(
+                                "IGDB API error: " + response.statusCode()))
+                )
+                .bodyToMono(new ParameterizedTypeReference<List<IgdbResponse>>() {
+                })
+                .block();
+        if (igdbResponse == null ||  igdbResponse.isEmpty()) {
+            throw new GameNotFoundException("No games found matching: " + id);
+        }
+
+        return igdbResponse.getFirst();
+    }
+
+    private String formatReleaseDate(Long unixTimestamp) {
+        if (unixTimestamp == null || unixTimestamp == 0) {
+            return "Unknown";
+        }
+        return Instant.ofEpochSecond(unixTimestamp).atZone(ZoneId.systemDefault())
+                .format(DateTimeFormatter.ISO_LOCAL_DATE);
+    }
 }
