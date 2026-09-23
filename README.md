@@ -10,4 +10,12 @@ Users can setup a lobby with x number of players and provide a means for all use
 Users will be able to leave review of other players they have played with so they can determine if they want to join the lobby.
 
 # Resources #
-To do..
+To complete but I shall add the resources for:
+* Udemy courses completed and in progress
+* Info on tech stack in use
+* Any other learning materials I make use of
+
+* Udemy: Spring boot
+* Udemy: JUnit/Mockito
+* Freecodecamp: Cleaning up git history
+
