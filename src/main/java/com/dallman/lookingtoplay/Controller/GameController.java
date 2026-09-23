@@ -3,7 +3,7 @@ package com.dallman.lookingtoplay.Controller;
 import com.dallman.lookingtoplay.DTO.IgdbResponse;
 import com.dallman.lookingtoplay.Game.Game;
 import com.dallman.lookingtoplay.Service.GameService;
-import com.dallman.lookingtoplay.Service.IgdbApiService;
+import com.dallman.lookingtoplay.Service.IgdbClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,18 +11,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class GameController {
 
     private GameService gameService;
-    private IgdbApiService igdbApiService;
+    private IgdbClient igdbClient;
 
     @Autowired
-    public GameController(GameService gameService, IgdbApiService igdbApiService) {
+    public GameController(GameService gameService, IgdbClient igdbClient) {
         this.gameService = gameService;
-        this.igdbApiService = igdbApiService;
+        this.igdbClient = igdbClient;
     }
 
     @RequestMapping("/")
@@ -34,18 +35,22 @@ public class GameController {
 
     @GetMapping("/addnewgame")
     public String search(@RequestParam(name="name") String name, Model model) {
-        List<IgdbResponse> response = igdbApiService.searchGameName(name);
+        List<IgdbResponse> response = igdbClient.searchGameName(name);
         System.out.println("game name " + name);
         System.out.println("response " + response);
         model.addAttribute("response", response);
-        return "newgamesearch";
+        return "addnewgame";
     }
 
     @GetMapping("/search")
     public String search(Model model, @RequestParam(name="name") String name) {
         List<Game> games = gameService.findByName(name);
-        model.addAttribute("games", games);
-        return "index";
+        if (games == null || games.size() == 0) {
+            model.addAttribute("games", new ArrayList<Game>());
+        } else {
+            model.addAttribute("games", games);
+        }
+        return "searchgame";
     }
 
 }

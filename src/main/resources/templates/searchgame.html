@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle ?: 'Thymeleaf Bootstrap Template'}">Template</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons (for profile icon) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/styles.css}">
+
+</head>
+<body>
+<!-- Top Section (10% height) -->
+<header class="top-section">
+    <!-- Centered Search Bar -->
+    <div class="search-container">
+        <form class="d-flex" th:action="@{/search}" method="get">
+            <input type="text"
+                   class="form-control search-bar"
+                   placeholder="Search..."
+                   th:name="name"
+                   th:value="${searchQuery}">
+            <button type="submit" class="btn btn-primary ms-2">
+                <i class="bi bi-search"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- Clear search button-->
+    <div class="clear-search-button">
+        <form class="d-flex" th:action="@{/}" method="get">
+            <button type="submit" class="btn btn-primary ms-2">
+                <i class="bi bi-x"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- Profile Dropdown Button (right side) -->
+    <div class="position-relative">
+        <button class="profile-btn"
+                type="button"
+                id="profileDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                th:title="${userName ?: 'Profile'}">
+            <i class="bi bi-person-fill"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow"
+            aria-labelledby="profileDropdown">
+            <li><h6 class="dropdown-header" th:text="${userName ?: 'User Name'}">User</h6></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item" th:href="@{/profile}">
+                    <i class="bi bi-person me-2"></i>Profile
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" th:href="@{/settings}">
+                    <i class="bi bi-gear me-2"></i>Settings
+                </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item text-danger" th:href="@{/logout}">
+                    <i class="bi bi-box-arrow-right me-2"></i>Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</header>
+
+<main class="container py-4">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4" th:switch="${#lists.size(games)}">
+        <div th:case="'0'" class="center-text-container">Game not found
+            <form class="d-flex" th:action="@{/addnewgame}" method="get">
+                <input type="hidden" name="name" th:value="${param.name}">
+                <button type="submit" class="btn btn-primary ms-2">Search IGDB
+                </button>
+            </form>
+        </div>
+        <div th:case="*">
+            <div class="col" th:each="response : ${response}">
+                <div class="card h-100 shadow-sm">
+                    <!--                    <img th:src="@{'/images/' + ${game.cover}}"-->
+                    <!--                         class="card-img-top"-->
+                    <!--                         alt="Card image"-->
+                    <!--                         loading="lazy">-->
+
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${response.name}">
+                            Game name
+                        </h5>
+
+                        <p class="card-text" th:text="${response.summary}">
+                            Game summary
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="#" class="btn btn-outline-primary btn-sm">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -3,8 +3,9 @@ package com.dallman.lookingtoplay.Service;
 import com.dallman.lookingtoplay.DTO.IgdbResponse;
 import com.dallman.lookingtoplay.Exception.GameNotFoundException;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
-import org.springframework.stereotype.Service;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -14,14 +15,14 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Service
-public class IgdbApiService {
+@Component
+public class IgdbClient {
 
     private final WebClient webClient;
     private final IgdbApiProperties igdbApiProperties;
     private final IgdbOAuthClient igdbOAuthClient;
 
-    public IgdbApiService(WebClient webClient, IgdbApiProperties igdbApiProperties, IgdbOAuthClient igdpOAuthClient) {
+    public IgdbClient(WebClient webClient, IgdbApiProperties igdbApiProperties, IgdbOAuthClient igdpOAuthClient) {
         this.webClient = webClient;
         this.igdbApiProperties = igdbApiProperties;
         this.igdbOAuthClient = igdpOAuthClient;
