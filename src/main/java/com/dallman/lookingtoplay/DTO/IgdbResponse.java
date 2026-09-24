@@ -18,6 +18,11 @@ public record IgdbResponse(
         // with the use of @JsonProperty
         @JsonProperty("first_release_date")
         Long firstReleaseDate,
+        @JsonProperty("total_rating")
+        Double totalRating,
+        Integer cover,
+        @JsonProperty("game_status")
+        String gameStatus,
         List<Integer> platforms
 ) { }
 
