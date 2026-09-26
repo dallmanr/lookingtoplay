@@ -1,20 +1,15 @@
 package com.dallman.lookingtoplay.Service;
 
 import com.dallman.lookingtoplay.DTO.IgdbResponse;
-import com.dallman.lookingtoplay.Exception.GameNotFoundException;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.ClientResponse;
-import reactor.core.publisher.Mono;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Component
+@Service
 public class IgdbGamesClient {
 
     private final IgdbApiClient igdbApiClient;
@@ -48,14 +43,4 @@ public class IgdbGamesClient {
         return Instant.ofEpochSecond(unixTimestamp).atZone(ZoneId.systemDefault())
                 .format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
-
-    //    private String extractPlatformNames(IgdbPlatform[] platforms) {
-//        if (platforms == null || platforms.length == 0) {
-//            return null;
-//        }
-//        return platforms.stream()
-//                .map(IgdbPlatform::name)
-//                .filter(n -> n != null)
-//                .collect(Collectors.joining(", "));
-//    }
 }
