@@ -1,7 +1,7 @@
 package com.dallman.lookingtoplay;
 
 import com.dallman.lookingtoplay.DTO.IgdbResponse;
-import com.dallman.lookingtoplay.Service.IgdbClient;
+import com.dallman.lookingtoplay.Service.IgdbGamesClient;
 import com.dallman.lookingtoplay.Service.IgdbOAuthClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class IgdbApiIntegrationTest {
 
     @Autowired
-    private IgdbClient igdbClient;
+    private IgdbGamesClient igdbGamesClient;
 
     @Autowired
     private IgdbOAuthClient igdbOAuthClient;
@@ -26,7 +26,7 @@ public class IgdbApiIntegrationTest {
         String accessToken = igdbOAuthClient.getAccessToken();
         System.out.println("Token obtained: " + accessToken.substring(0,10));
 
-        List<IgdbResponse> game = igdbClient.searchGameName("Rival Species");
+        List<IgdbResponse> game = igdbGamesClient.searchGameName("Rival Species");
 
         assertNotNull(game);
         assert(game.getFirst().name().length() > 0);
