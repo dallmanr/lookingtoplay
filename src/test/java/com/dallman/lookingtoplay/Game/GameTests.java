@@ -2,6 +2,7 @@ package com.dallman.lookingtoplay.Game;
 
 
 import com.dallman.lookingtoplay.DTO.IgdbGame;
+import com.dallman.lookingtoplay.Repository.GameRepository;
 import com.dallman.lookingtoplay.Service.GameService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -36,6 +38,9 @@ public class GameTests {
 
     @Autowired
     private GameService gameService;
+
+    @Autowired
+    private GameRepository gameRepository;
 
     // Use the ObjectMapper because our /savegame uses @RequestBody which is going to be our IgdbResponse we create a game from
     // We can then pass our test object in our test for creating a game
@@ -96,9 +101,9 @@ public class GameTests {
         ModelAndViewAssert.assertViewName(mav, "gamedetails");
 
         // The game should have been saved, so check that it exists
-        Game verifyGame = gameService.findByIgdbId(igdbGame.id());
+        Optional<Game> verifyGame = gameRepository.findByIgdbId(igdbGame.id());
         assertNotNull(verifyGame, "Game should not be null");
-        assertNotNull(gameService.findByName(verifyGame.getName()), "Game should not be null");
+        assertNotNull(gameService.findByName(verifyGame.get().getName()), "Game should not be null");
 //        assertIterableEquals(igdbResponse.platforms(),  verifyGame.getPlatforms(), "Platforms should match");
 
     }

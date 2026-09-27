@@ -1,7 +1,6 @@
 package com.dallman.lookingtoplay.Service;
 
 import com.dallman.lookingtoplay.DTO.IgdbGame;
-import com.dallman.lookingtoplay.DTO.IgdbPlatform;
 import com.dallman.lookingtoplay.Game.Game;
 import com.dallman.lookingtoplay.Game.Platform;
 import com.dallman.lookingtoplay.Repository.GameRepository;
@@ -28,10 +27,6 @@ public class GameService {
 
     public Game findById(Integer id) {
         return gameRepository.findById(id).orElse(null);
-    }
-
-    public Game findByIgdbId(Integer id) {
-        return gameRepository.findByIgdbId(id);
     }
 
     public Game findByPlatformId(int platformId) {
@@ -62,16 +57,25 @@ public class GameService {
     }
 
     public Game save(IgdbGame igdbGame, List<Integer> platformIds) {
-        Game game = new Game();
-        game.setIgdbId(igdbGame.id());
-        game.setName(igdbGame.name());
-        game.setSummary(igdbGame.summary());
-        game.setFirstReleaseDate(igdbGame.firstReleaseDate());
-        game.setRating(igdbGame.totalRating());
-        game.setCoverId(igdbGame.cover());
-        game.setReleaseStatus(igdbGame.gameStatus());
-        game.setGameType(igdbGame.gameType());
-        game.setUrl(igdbGame.url());
+        if (gameRepository.findByIgdbId(igdbGame.id()).isPresent()) {
+            throw new RuntimeException("Game already exists");
+        }
+
+        Game game = gameRepository.findByIgdbId(igdbGame.id())
+                .orElseGet(() -> {
+                    Game newGame = new Game();
+                    newGame.setIgdbId(igdbGame.id());
+                    newGame.setName(igdbGame.name());
+                    newGame.setSummary(igdbGame.summary());
+                    newGame.setFirstReleaseDate(igdbGame.firstReleaseDate());
+                    newGame.setRating(igdbGame.totalRating());
+                    newGame.setCoverId(igdbGame.cover());
+                    newGame.setReleaseStatus(igdbGame.gameStatus());
+                    newGame.setGameType(igdbGame.gameType());
+                    newGame.setUrl(igdbGame.url());
+
+                    return gameRepository.save(newGame);
+                });
 
         List<Platform> platforms = platformService.findOrCreateByIgdbIds(platformIds);
         for (Platform platform : platforms) {

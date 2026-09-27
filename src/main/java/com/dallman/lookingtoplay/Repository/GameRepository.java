@@ -5,6 +5,7 @@ import com.dallman.lookingtoplay.Game.Game;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /*
  * findBy... Spring will automatically determine what to find by so long as the method signature is findBy... This is a derived query
@@ -18,5 +19,5 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
 
     Game findByPlatforms(int platformId);
 
-    Game findByIgdbId(Integer id);
+    Optional<Game> findByIgdbId(Integer id);
 }
