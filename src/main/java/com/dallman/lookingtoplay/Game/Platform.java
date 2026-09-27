@@ -17,6 +17,9 @@ public class Platform {
     @Column(name="platform_name")
     private String name;
 
+    @Column(name="abbreviation")
+    private String abbreviation;
+
     @Column(name="igdb_platform_id")
     private Integer igdbPlatformId;
 
@@ -33,8 +36,9 @@ public class Platform {
         this.igdbPlatformId = igdbPlatformId;
     }
 
-    public Platform(Integer igdbPlatformId, String name) {
+    public Platform(Integer igdbPlatformId, String abbreviation, String name) {
         this.igdbPlatformId = igdbPlatformId;
+        this.abbreviation = abbreviation;
         this.name = name;
     }
 
@@ -62,6 +66,14 @@ public class Platform {
         this.name = name;
     }
 
+    public String getAbbreviation() {
+        return abbreviation;
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
+    }
+
     public List<Game> getGamesList() {
 
         if (gamesList == null) {
@@ -73,6 +85,10 @@ public class Platform {
 
     public void setGamesList(List<Game> gamesList) {
         this.gamesList = gamesList;
+    }
+
+    public void addGame(Game game) {
+        getGamesList().add(game);
     }
 
     @Override

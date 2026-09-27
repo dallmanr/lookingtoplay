@@ -76,37 +76,21 @@
                         </legend>
 
                         <div
-                                class="form-check"
-                                th:each="platform : ${game.platforms}">
+                                class="d-flex flex-wrap gap-2"
+                                th:if="${game.platforms != null and not #lists.isEmpty(game.platforms)}">
 
-                            <!-- Display-only checkbox -->
-                            <input
-                                    checked
-                                    class="form-check-input"
-                                    disabled
-                                    th:id="${'platform-' + platform}"
-                                    th:value="${platform}"
-                                    type="checkbox">
-
-                            <label
-                                    class="form-check-label"
-                                    th:for="${'platform-' + platform}"
-                                    th:text="${platform}">
+                            <span
+                                    class="badge text-bg-primary"
+                                    th:each="p : ${game.platforms}"
+                                    th:text="${p.abbreviation}">
                                 Platform
-                            </label>
-
-                            <!-- Hidden field submits the value -->
-                            <input
-                                    name="platforms"
-                                    th:value="${platform}"
-                                    type="hidden">
+                            </span>
                         </div>
 
-                        <!-- Shown if no platforms are available -->
                         <div
                                 class="text-muted"
-                                th:if="${#lists.isEmpty(game.platforms)}">
-                            No platforms available.
+                                th:if="${game.platforms == null or #lists.isEmpty(game.platforms)}">
+                            No platforms found
                         </div>
                     </fieldset>
 

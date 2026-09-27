@@ -102,4 +102,10 @@ public class GameTests {
 //        assertIterableEquals(igdbResponse.platforms(),  verifyGame.getPlatforms(), "Platforms should match");
 
     }
+
+    @Test
+    @DisplayName("Testing Platform creation")
+    public void testPlatformCreation() throws Exception {
+        System.out.println("Test Platform creation");
+    }
 }

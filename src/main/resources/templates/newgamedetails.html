@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -37,7 +36,7 @@
                                 class="form-control"
                                 id="name"
                                 readonly
-                                th:field="${igdbGame.name}"
+                                th:value="${igdbGame.name}"
                                 type="text">
                     </div>
 
@@ -52,7 +51,7 @@
                                 id="summary"
                                 readonly
                                 rows="5"
-                                th:field="${igdbGame.summary}"></textarea>
+                                th:text="${igdbGame.summary}"></textarea>
                     </div>
 
                     <!-- Release Date -->
@@ -65,7 +64,7 @@
                                 class="form-control"
                                 id="releaseDate"
                                 readonly
-                                th:field="${igdbGame.firstReleaseDate}"
+                                th:value="${igdbGame.firstReleaseDate}"
                                 type="date">
                     </div>
 
@@ -76,42 +75,27 @@
                         </legend>
 
                         <div
-                                class="form-check"
-                                th:each="platform : ${igdbGame.platforms}">
+                                class="d-flex flex-wrap gap-2"
+                                th:if="${platforms != null and not #lists.isEmpty(platforms)}">
 
-                            <!-- Display-only checkbox -->
-                            <input
-                                    checked
-                                    class="form-check-input"
-                                    disabled
-                                    th:id="${'platform-' + platform}"
-                                    th:value="${platform}"
-                                    type="checkbox">
-
-                            <label
-                                    class="form-check-label"
-                                    th:for="${'platform-' + platform}"
-                                    th:text="${platform}">
+                            <span
+                                    class="badge text-bg-primary"
+                                    th:each="platform : ${platforms}"
+                                    th:text="${platform.abbreviation}">
                                 Platform
-                            </label>
-
-                            <!-- Hidden field submits the value -->
-                            <input
-                                    name="platforms"
-                                    th:value="${platform}"
-                                    type="hidden">
+                            </span>
                         </div>
 
-                        <!-- Shown if no platforms are available -->
                         <div
                                 class="text-muted"
-                                th:if="${#lists.isEmpty(igdbGame.platforms)}">
-                            No platforms available.
+                                th:if="${platforms == null or #lists.isEmpty(platforms)}">
+                            No platforms found
                         </div>
                     </fieldset>
 
-                    <!-- Buttons -->
+                    <!-- Buttons and submission form -->
                     <div class="d-flex justify-content-end gap-2">
+
                         <button
                                 class="btn btn-secondary"
                                 onclick="history.back()"
@@ -119,56 +103,82 @@
                             Cancel
                         </button>
 
-                        <form class="d-flex" method="POST" th:action="@{/savegame}">
-                            <input type="hidden"
-                                   th:name="${_csrf.parameterName}"
-                                   th:value="${_csrf.token}">
+                        <form
+                                class="d-flex"
+                                method="POST"
+                                th:action="@{/savegame}">
 
-                            <input type="hidden"
-                                   name="id"
-                                   th:value="${igdbGame.id}">
+                            <!-- CSRF token -->
+                            <input
+                                    th:name="${_csrf.parameterName}"
+                                    th:value="${_csrf.token}"
+                                    type="hidden">
 
-                            <input type="hidden"
-                                   name="name"
-                                   th:value="${igdbGame.name}">
+                            <!-- Game fields -->
+                            <input
+                                    name="id"
+                                    th:value="${igdbGame.id}"
+                                    type="hidden">
 
-                            <input type="hidden"
-                                   name="summary"
-                                   th:value="${igdbGame.summary}">
+                            <input
+                                    name="name"
+                                    th:value="${igdbGame.name}"
+                                    type="hidden">
 
-                            <input type="hidden"
-                                   name="firstReleaseDate"
-                                   th:value="${igdbGame.firstReleaseDate}">
+                            <input
+                                    name="summary"
+                                    th:value="${igdbGame.summary}"
+                                    type="hidden">
 
-                            <input type="hidden"
-                                   name="totalRating"
-                                   th:value="${igdbGame.totalRating}">
+                            <input
+                                    name="firstReleaseDate"
+                                    th:value="${igdbGame.firstReleaseDate}"
+                                    type="hidden">
 
-                            <input type="hidden"
-                                   name="cover"
-                                   th:value="${igdbGame.cover}">
+                            <input
+                                    name="totalRating"
+                                    th:value="${igdbGame.totalRating}"
+                                    type="hidden">
 
-                            <input type="hidden"
-                                   name="gameStatus"
-                                   th:value="${igdbGame.gameStatus}">
+                            <input
+                                    name="cover"
+                                    th:value="${igdbGame.cover}"
+                                    type="hidden">
 
-                            <input type="hidden"
-                                   name="url"
-                                   th:value="${igdbGame.url}">
+                            <input
+                                    name="gameStatus"
+                                    th:value="${igdbGame.gameStatus}"
+                                    type="hidden">
 
-                            <input type="hidden"
-                                   name="gameType"
-                                   th:value="${igdbGame.gameType}">
-                            <!-- Submit one hidden field for each platform ID -->
-                            <th:block th:each="platformId : ${igdbGame.platforms}">
-                                <input type="hidden"
-                                       name="platforms"
-                                       th:value="${platformId}">
+                            <input
+                                    name="url"
+                                    th:value="${igdbGame.url}"
+                                    type="hidden">
+
+                            <input
+                                    name="gameType"
+                                    th:value="${igdbGame.gameType}"
+                                    type="hidden">
+
+                            <!-- Submit one platform ID for each platform -->
+                            <th:block
+                                    th:if="${platforms != null}"
+                                    th:each="platform : ${platforms}">
+
+                                <input
+                                        name="platformIds"
+                                        th:value="${platform.id}"
+                                        type="hidden">
                             </th:block>
 
-                            <button class="btn btn-primary ms-2" type="submit">SAVE</button>
+                            <button
+                                    class="btn btn-primary ms-2"
+                                    type="submit">
+                                SAVE
+                            </button>
                         </form>
                     </div>
+
                 </div>
             </div>
 

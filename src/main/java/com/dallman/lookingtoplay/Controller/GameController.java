@@ -1,9 +1,12 @@
 package com.dallman.lookingtoplay.Controller;
 
 import com.dallman.lookingtoplay.DTO.IgdbGame;
+import com.dallman.lookingtoplay.DTO.IgdbPlatform;
 import com.dallman.lookingtoplay.Game.Game;
 import com.dallman.lookingtoplay.Service.GameService;
 import com.dallman.lookingtoplay.Service.IgdbGamesClient;
+import com.dallman.lookingtoplay.Service.IgdbPlatformsClient;
+import com.dallman.lookingtoplay.Service.PlatformService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,12 +19,17 @@ import java.util.List;
 public class GameController {
 
     private GameService gameService;
+    private PlatformService platformService;
     private IgdbGamesClient igdbGamesClient;
+    private IgdbPlatformsClient igdbPlatformsClient;
 
     @Autowired
-    public GameController(GameService gameService, IgdbGamesClient igdbGamesClient) {
+    public GameController(GameService gameService, PlatformService platformService,
+                          IgdbGamesClient igdbGamesClient,  IgdbPlatformsClient igdbPlatformsClient) {
         this.gameService = gameService;
         this.igdbGamesClient = igdbGamesClient;
+        this.platformService = platformService;
+        this.igdbPlatformsClient = igdbPlatformsClient;
     }
 
     @RequestMapping("/")
@@ -45,14 +53,22 @@ public class GameController {
     @GetMapping("/addnewgame")
     public String searchForNewGame(@RequestParam(name="name") String name, Model model) {
         List<IgdbGame> response = igdbGamesClient.searchGameName(name);
-        model.addAttribute("response", response);
+        if  (response != null || response.size() != 0) {
+            model.addAttribute("response", response);
+        }
         return "addnewgame";
     }
 
     @GetMapping("/newgamedetails")
     public String newGameDetails(@RequestParam(name="id") int id, Model model) {
         IgdbGame igdbGame = igdbGamesClient.findById(id);
-        model.addAttribute("igdbGame", igdbGame);
+        if (igdbGame != null) {
+            model.addAttribute("igdbGame", igdbGame);
+            List<IgdbPlatform> platforms = igdbPlatformsClient.getPlatformInfo(igdbGame.platforms());
+            if (platforms != null || platforms.size() != 0) {
+                model.addAttribute("platforms", platforms);
+            }
+        }
         return "newgamedetails";
     }
 
@@ -65,8 +81,8 @@ public class GameController {
     }
 
     @PostMapping("/savegame")
-    public String saveNewGame(@ModelAttribute IgdbGame igdbGame, Model model) {
-        Game game = gameService.save(igdbGame);
+    public String saveNewGame(@ModelAttribute IgdbGame igdbGame, @RequestParam(name="platformIds", required=false) List<Integer> platformIds, Model model) {
+        Game game = gameService.save(igdbGame,  platformIds);
         return viewGameDetails(game.getId(), model);
     }
 

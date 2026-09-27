@@ -1,5 +1,7 @@
 package com.dallman.lookingtoplay.DTO;
 
 public record IgdbPlatform(
-        Integer id
+        Integer id,
+        String abbreviation,
+        String name
 ) {}

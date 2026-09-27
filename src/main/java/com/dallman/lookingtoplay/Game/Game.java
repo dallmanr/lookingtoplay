@@ -210,4 +210,8 @@ public class Game {
                 ", releaseStatus=" + releaseStatus +
                 '}';
     }
+
+    public void setPlatforms(List<Platform> platforms) {
+        this.platforms = platforms;
+    }
 }

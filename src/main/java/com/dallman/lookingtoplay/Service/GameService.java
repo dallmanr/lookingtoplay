@@ -1,6 +1,7 @@
 package com.dallman.lookingtoplay.Service;
 
 import com.dallman.lookingtoplay.DTO.IgdbGame;
+import com.dallman.lookingtoplay.DTO.IgdbPlatform;
 import com.dallman.lookingtoplay.Game.Game;
 import com.dallman.lookingtoplay.Game.Platform;
 import com.dallman.lookingtoplay.Repository.GameRepository;
@@ -17,9 +18,12 @@ public class GameService {
 
     private final PlatformRepository platformRespository;
 
-    public GameService(GameRepository gameRepository, PlatformRepository platformRespository) {
+    private final PlatformService platformService;
+
+    public GameService(GameRepository gameRepository, PlatformRepository platformRespository, PlatformService platformService) {
         this.gameRepository = gameRepository;
         this.platformRespository = platformRespository;
+        this.platformService = platformService;
     }
 
     public Game findById(Integer id) {
@@ -57,7 +61,7 @@ public class GameService {
         }
     }
 
-    public Game save(IgdbGame igdbGame) {
+    public Game save(IgdbGame igdbGame, List<Integer> platformIds) {
         Game game = new Game();
         game.setIgdbId(igdbGame.id());
         game.setName(igdbGame.name());
@@ -68,13 +72,13 @@ public class GameService {
         game.setReleaseStatus(igdbGame.gameStatus());
         game.setGameType(igdbGame.gameType());
         game.setUrl(igdbGame.url());
-        game.setGameType(igdbGame.gameType());
 
-        for (Integer i : igdbGame.platforms()) {
-            game.addPlatform(new Platform(i, "PC"));
+        List<Platform> platforms = platformService.findOrCreateByIgdbIds(platformIds);
+        for (Platform platform : platforms) {
+            platform.addGame(game);
         }
-
-        platformRespository.save(game.getPlatforms().iterator().next());
+        platformRespository.saveAll(platforms);
+        game.setPlatforms(platforms);
         return gameRepository.save(game);
     }
 }
