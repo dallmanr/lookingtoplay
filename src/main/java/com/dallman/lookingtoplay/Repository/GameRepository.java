@@ -18,9 +18,5 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
 
     Game findByPlatforms(int platformId);
 
-    void deleteById(int id);
-
-    Game save(IgdbGame response);
-
     Game findByIgdbId(Integer id);
 }

@@ -178,10 +178,17 @@ public class Game {
 
     public void addPlatform(Platform platform) {
         getPlatforms().add(platform);
+
+        if (!platform.getGamesList().contains(this)) {
+            platform.getGamesList().add(this);
+        }
     }
 
-    public void setPlatforms(List<Platform> platforms) {
-        this.platforms = platforms;
+    public void removePlatform(Platform platform) {
+        getPlatforms().remove(platform);
+        if (platform.getGamesList().contains(this)) {
+            platform.getGamesList().remove(this);
+        }
     }
 
     public Platform findPlatformById(int id) {

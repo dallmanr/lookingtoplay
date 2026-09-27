@@ -17,25 +17,24 @@ public class Platform {
     @Column(name="platform_name")
     private String name;
 
+    @Column(name="igdb_platform_id")
+    private Integer igdbPlatformId;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,  CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="platform_game",
             joinColumns = @JoinColumn(name="platform_id"),
             inverseJoinColumns = @JoinColumn(name="game_id"))
     private List<Game> gamesList;
 
-    @Column(name="igdb_platform_id")
-    private int igdbPlatformId;
-
-    public Platform(int igdbPlatformId) {
-        this.id = id;
-        this.igdbPlatformId = igdbPlatformId;
-    }
-
     public Platform() {
     }
 
-    public Platform(Integer id, String name) {
-        this.id = id;
+    public Platform(Integer igdbPlatformId) {
+        this.igdbPlatformId = igdbPlatformId;
+    }
+
+    public Platform(Integer igdbPlatformId, String name) {
+        this.igdbPlatformId = igdbPlatformId;
         this.name = name;
     }
 
@@ -47,11 +46,11 @@ public class Platform {
         this.id = id;
     }
 
-    public int getIgdbPlatformId() {
+    public Integer getIgdbPlatformId() {
         return igdbPlatformId;
     }
 
-    public void setIgdbPlatformId(int igdbPlatformId) {
+    public void setIgdbPlatformId(Integer igdbPlatformId) {
         this.igdbPlatformId = igdbPlatformId;
     }
 

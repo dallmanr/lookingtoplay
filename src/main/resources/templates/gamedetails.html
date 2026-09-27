@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
 
-    <title>Release Details</title>
+    <title>Game details</title>
 
     <!-- Bootstrap 5 CSS -->
     <link
@@ -69,46 +69,46 @@
                                 type="date">
                     </div>
 
-<!--                    &lt;!&ndash; Platforms &ndash;&gt;-->
-<!--                    <fieldset class="mb-4">-->
-<!--                        <legend class="form-label">-->
-<!--                            Platforms-->
-<!--                        </legend>-->
+                    <!-- Platforms -->
+                    <fieldset class="mb-4">
+                        <legend class="form-label">
+                            Platforms
+                        </legend>
 
-<!--                        <div-->
-<!--                                class="form-check"-->
-<!--                                th:each="platform : ${game.platforms}">-->
+                        <div
+                                class="form-check"
+                                th:each="platform : ${game.platforms}">
 
-<!--                            &lt;!&ndash; Display-only checkbox &ndash;&gt;-->
-<!--                            <input-->
-<!--                                    checked-->
-<!--                                    class="form-check-input"-->
-<!--                                    disabled-->
-<!--                                    th:id="${'platform-' + platform}"-->
-<!--                                    th:value="${platform}"-->
-<!--                                    type="checkbox">-->
+                            <!-- Display-only checkbox -->
+                            <input
+                                    checked
+                                    class="form-check-input"
+                                    disabled
+                                    th:id="${'platform-' + platform}"
+                                    th:value="${platform}"
+                                    type="checkbox">
 
-<!--                            <label-->
-<!--                                    class="form-check-label"-->
-<!--                                    th:for="${'platform-' + platform}"-->
-<!--                                    th:text="${platform}">-->
-<!--                                Platform-->
-<!--                            </label>-->
+                            <label
+                                    class="form-check-label"
+                                    th:for="${'platform-' + platform}"
+                                    th:text="${platform}">
+                                Platform
+                            </label>
 
-<!--                            &lt;!&ndash; Hidden field submits the value &ndash;&gt;-->
-<!--                            <input-->
-<!--                                    name="platforms"-->
-<!--                                    th:value="${platform}"-->
-<!--                                    type="hidden">-->
-<!--                        </div>-->
+                            <!-- Hidden field submits the value -->
+                            <input
+                                    name="platforms"
+                                    th:value="${platform}"
+                                    type="hidden">
+                        </div>
 
-<!--                        &lt;!&ndash; Shown if no platforms are available &ndash;&gt;-->
-<!--                        <div-->
-<!--                                class="text-muted"-->
-<!--                                th:if="${#lists.isEmpty(game.platforms)}">-->
-<!--                            No platforms available.-->
-<!--                        </div>-->
-<!--                    </fieldset>-->
+                        <!-- Shown if no platforms are available -->
+                        <div
+                                class="text-muted"
+                                th:if="${#lists.isEmpty(game.platforms)}">
+                            No platforms available.
+                        </div>
+                    </fieldset>
 
                     <!-- Buttons -->
                     <div class="d-flex justify-content-end gap-2">

@@ -1,10 +1,10 @@
 package com.dallman.lookingtoplay.Service;
 
 import com.dallman.lookingtoplay.DTO.IgdbGame;
-import com.dallman.lookingtoplay.DTO.IgdbPlatform;
 import com.dallman.lookingtoplay.Game.Game;
 import com.dallman.lookingtoplay.Game.Platform;
 import com.dallman.lookingtoplay.Repository.GameRepository;
+import com.dallman.lookingtoplay.Repository.PlatformRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +15,11 @@ public class GameService {
 
     private final GameRepository gameRepository;
 
-    public GameService(GameRepository gameRepository) {
+    private final PlatformRepository platformRespository;
+
+    public GameService(GameRepository gameRepository, PlatformRepository platformRespository) {
         this.gameRepository = gameRepository;
+        this.platformRespository = platformRespository;
     }
 
     public Game findById(Integer id) {
@@ -68,9 +71,10 @@ public class GameService {
         game.setGameType(igdbGame.gameType());
 
         for (Integer i : igdbGame.platforms()) {
-            game.addPlatform(new Platform(i));
+            game.addPlatform(new Platform(i, "PC"));
         }
 
+        platformRespository.save(game.getPlatforms().iterator().next());
         return gameRepository.save(game);
     }
 }
