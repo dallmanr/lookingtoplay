@@ -1,6 +1,6 @@
 package com.dallman.lookingtoplay;
 
-import com.dallman.lookingtoplay.DTO.IgdbResponse;
+import com.dallman.lookingtoplay.DTO.IgdbGame;
 import com.dallman.lookingtoplay.Service.IgdbGamesClient;
 import com.dallman.lookingtoplay.Service.IgdbOAuthClient;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ public class IgdbApiIntegrationTest {
         String accessToken = igdbOAuthClient.getAccessToken();
         System.out.println("Token obtained: " + accessToken.substring(0,10));
 
-        List<IgdbResponse> game = igdbGamesClient.searchGameName("Rival Species");
+        List<IgdbGame> game = igdbGamesClient.searchGameName("Rival Species");
 
         assertNotNull(game);
         assert(game.getFirst().name().length() > 0);

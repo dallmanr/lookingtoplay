@@ -80,10 +80,10 @@
 
             <div class="col" th:each="game : ${games}">
                 <div class="card h-100 shadow-sm">
-                    <img th:src="@{'/images/' + ${game.cover}}"
-                         class="card-img-top"
-                         alt="Card image"
-                         loading="lazy">
+<!--                    <img th:src="@{'/images/' + ${game.cover}}"-->
+<!--                         class="card-img-top"-->
+<!--                         alt="Card image"-->
+<!--                         loading="lazy">-->
 
                     <div class="card-body">
                         <h5 class="card-title" th:text="${game.name}">
@@ -93,10 +93,17 @@
                         <p class="card-text" th:text="${game.summary}">
                             Game summary
                         </p>
+
+<!--                        <p class="card-text" th:text="${game.platforms}">-->
+<!--                            Platforms-->
+<!--                        </p>-->
                     </div>
-                    <div class="card-footer bg-transparent">
-                        <a href="#" class="btn btn-outline-primary btn-sm">View</a>
-                    </div>
+                    <form th:action="@{/viewgamedetails}" method="GET">
+                        <div class="card-footer bg-transparent">
+                            <input name="id" th:value="${game.id}" type="hidden">
+                            <button class="btn btn-outline-primary btn-sm">View</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 

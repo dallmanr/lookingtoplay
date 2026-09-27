@@ -14,20 +14,29 @@ public class Platform {
     @Column(name="id")
     private int id;
 
+    @Column(name="platform_name")
+    private String name;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,  CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="platform_game",
             joinColumns = @JoinColumn(name="platform_id"),
             inverseJoinColumns = @JoinColumn(name="game_id"))
     private List<Game> gamesList;
 
-    private int platformId;
+    @Column(name="igdb_platform_id")
+    private int igdbPlatformId;
 
-    public Platform(int platformId) {
+    public Platform(int igdbPlatformId) {
         this.id = id;
-        this.platformId = platformId;
+        this.igdbPlatformId = igdbPlatformId;
     }
 
     public Platform() {
+    }
+
+    public Platform(Integer id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public int getId() {
@@ -38,12 +47,20 @@ public class Platform {
         this.id = id;
     }
 
-    public int getPlatformId() {
-        return platformId;
+    public int getIgdbPlatformId() {
+        return igdbPlatformId;
     }
 
-    public void setPlatformId(int platformId) {
-        this.platformId = platformId;
+    public void setIgdbPlatformId(int igdbPlatformId) {
+        this.igdbPlatformId = igdbPlatformId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<Game> getGamesList() {
@@ -63,7 +80,7 @@ public class Platform {
     public String toString() {
         return "Platform{" +
                 "id=" + id +
-                ", platformId=" + platformId +
+                ", platformId=" + igdbPlatformId +
                 '}';
     }
 }

@@ -1,5 +1,6 @@
 package com.dallman.lookingtoplay.Repository;
 
+import com.dallman.lookingtoplay.DTO.IgdbGame;
 import com.dallman.lookingtoplay.Game.Game;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,4 +17,10 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
     List<Game> findAll();
 
     Game findByPlatforms(int platformId);
+
+    void deleteById(int id);
+
+    Game save(IgdbGame response);
+
+    Game findByIgdbId(Integer id);
 }

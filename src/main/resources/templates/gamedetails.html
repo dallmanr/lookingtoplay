@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
 
     <title>Release Details</title>
 
@@ -26,111 +26,100 @@
                 </div>
 
                 <div class="card-body">
-                    <form
-                            th:object="${igdbResponse}"
-                            th:action="@{/releases/save}"
-                            method="post">
 
-                        <!-- Name -->
-                        <div class="mb-3">
-                            <label for="name" class="form-label">
-                                Name
-                            </label>
+                    <!-- Name -->
+                    <div class="mb-3">
+                        <label class="form-label" for="name">
+                            Name
+                        </label>
 
-                            <input
-                                    type="text"
-                                    id="name"
-                                    class="form-control"
-                                    th:field="*{name}"
-                                    readonly>
-                        </div>
+                        <input
+                                class="form-control"
+                                id="name"
+                                readonly
+                                th:field="${game.name}"
+                                type="text">
+                    </div>
 
-                        <!-- Summary -->
-                        <div class="mb-3">
-                            <label for="summary" class="form-label">
-                                Summary
-                            </label>
+                    <!-- Summary -->
+                    <div class="mb-3">
+                        <label class="form-label" for="summary">
+                            Summary
+                        </label>
 
-                            <textarea
-                                    id="summary"
-                                    class="form-control"
-                                    rows="5"
-                                    th:field="*{summary}"
-                                    readonly></textarea>
-                        </div>
+                        <textarea
+                                class="form-control"
+                                id="summary"
+                                readonly
+                                rows="5"
+                                th:field="${game.summary}"></textarea>
+                    </div>
 
-                        <!-- Release Date -->
-                        <div class="mb-3">
-                            <label for="releaseDate" class="form-label">
-                                Release Date
-                            </label>
+                    <!-- Release Date -->
+                    <div class="mb-3">
+                        <label class="form-label" for="releaseDate">
+                            Release Date
+                        </label>
 
-                            <input
-                                    type="date"
-                                    id="releaseDate"
-                                    class="form-control"
-                                    th:field="*{firstReleaseDate}"
-                                    readonly>
-                        </div>
+                        <input
+                                class="form-control"
+                                id="releaseDate"
+                                readonly
+                                th:field="${game.firstReleaseDate}"
+                                type="date">
+                    </div>
 
-                        <!-- Platforms -->
-                        <fieldset class="mb-4">
-                            <legend class="form-label">
-                                Platforms
-                            </legend>
+<!--                    &lt;!&ndash; Platforms &ndash;&gt;-->
+<!--                    <fieldset class="mb-4">-->
+<!--                        <legend class="form-label">-->
+<!--                            Platforms-->
+<!--                        </legend>-->
 
-                            <div
-                                    class="form-check"
-                                    th:each="platform : ${igdbResponse.platforms}">
+<!--                        <div-->
+<!--                                class="form-check"-->
+<!--                                th:each="platform : ${game.platforms}">-->
 
-                                <!-- Display-only checkbox -->
-                                <input
-                                        type="checkbox"
-                                        class="form-check-input"
-                                        th:id="${'platform-' + platform}"
-                                        th:value="${platform}"
-                                        checked
-                                        disabled>
+<!--                            &lt;!&ndash; Display-only checkbox &ndash;&gt;-->
+<!--                            <input-->
+<!--                                    checked-->
+<!--                                    class="form-check-input"-->
+<!--                                    disabled-->
+<!--                                    th:id="${'platform-' + platform}"-->
+<!--                                    th:value="${platform}"-->
+<!--                                    type="checkbox">-->
 
-                                <label
-                                        class="form-check-label"
-                                        th:for="${'platform-' + platform}"
-                                        th:text="${platform}">
-                                    Platform
-                                </label>
+<!--                            <label-->
+<!--                                    class="form-check-label"-->
+<!--                                    th:for="${'platform-' + platform}"-->
+<!--                                    th:text="${platform}">-->
+<!--                                Platform-->
+<!--                            </label>-->
 
-                                <!-- Hidden field submits the value -->
-                                <input
-                                        type="hidden"
-                                        name="platforms"
-                                        th:value="${platform}">
-                            </div>
+<!--                            &lt;!&ndash; Hidden field submits the value &ndash;&gt;-->
+<!--                            <input-->
+<!--                                    name="platforms"-->
+<!--                                    th:value="${platform}"-->
+<!--                                    type="hidden">-->
+<!--                        </div>-->
 
-                            <!-- Shown if no platforms are available -->
-                            <div
-                                    class="text-muted"
-                                    th:if="${#lists.isEmpty(igdbResponse.platforms)}">
-                                No platforms available.
-                            </div>
-                        </fieldset>
+<!--                        &lt;!&ndash; Shown if no platforms are available &ndash;&gt;-->
+<!--                        <div-->
+<!--                                class="text-muted"-->
+<!--                                th:if="${#lists.isEmpty(game.platforms)}">-->
+<!--                            No platforms available.-->
+<!--                        </div>-->
+<!--                    </fieldset>-->
 
-                        <!-- Buttons -->
-                        <div class="d-flex justify-content-end gap-2">
-                            <button
-                                    type="button"
-                                    class="btn btn-secondary"
-                                    onclick="history.back()">
-                                Cancel
-                            </button>
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-end gap-2">
+                        <button
+                                class="btn btn-secondary"
+                                onclick="history.back()"
+                                type="button">
+                            Cancel
+                        </button>
+                    </div>
 
-                            <button
-                                    type="submit"
-                                    class="btn btn-primary">
-                                Save
-                            </button>
-                        </div>
-
-                    </form>
                 </div>
             </div>
 

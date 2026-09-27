@@ -6,9 +6,7 @@ import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name="games")
@@ -16,50 +14,66 @@ public class Game {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name="game_id")
     private int id;
+
+    @Column(name="igdb_id")
+    @NotNull
+    private int igdbId;
 
     @Column(name="name")
     @NotNull
     private String name;
 
-    @Column(name="cover")
-    private String cover;
+    @Column(name="cover_id")
+    private Integer coverId;
 
     @Column(name="summary")
     private String summary;
 
+    @Column(name="first_release_date")
+    private Long firstReleaseDate;
+
+    @Column(name="rating")
+    private Double rating;
+
     @Column(name="url")
     private String url;
 
+    @Column(name="release_status")
+    private Integer releaseStatus;
+
     @Column(name="game_type")
-    private int gameType;
+    private Integer gameType;
 
     @OneToMany(mappedBy = "game")
     private List<Lobby> lobbies;
 
-    @OneToMany(mappedBy="gamesList")
+    @ManyToMany(mappedBy="gamesList")
     private List<Platform> platforms;
 
 
     public Game() {
     }
 
-    public Game(String name, String summary, String url, int gameType) {
+    public Game(String name, String summary, String url, Integer gameType) {
         this.name = name;
         this.summary = summary;
         this.url = url;
         this.gameType = gameType;
-        this.platforms = new ArrayList<>();
     }
 
-    public Game(String name, String cover, String summary, String url, int gameType) {
+    public Game(int igdbId, String name, Integer coverId, String summary, Long firstReleaseDate, Double rating, String url, Integer releaseStatus, Integer gameType, List<Platform> platforms) {
+        this.igdbId = igdbId;
         this.name = name;
-        this.cover = cover;
+        this.coverId = coverId;
         this.summary = summary;
+        this.firstReleaseDate = firstReleaseDate;
+        this.rating = rating;
         this.url = url;
+        this.releaseStatus = releaseStatus;
         this.gameType = gameType;
-        this.platforms = new ArrayList<>();
+        this.platforms = platforms;
     }
 
     public int getId() {
@@ -70,6 +84,7 @@ public class Game {
         this.id = id;
     }
 
+
     public String getName() {
         return name;
     }
@@ -78,12 +93,12 @@ public class Game {
         this.name = name;
     }
 
-    public String getCover() {
-        return cover;
+    public Integer getCoverId() {
+        return coverId;
     }
 
-    public void setCover(String cover) {
-        this.cover = cover;
+    public void setCoverId(Integer coverId) {
+        this.coverId = coverId;
     }
 
     public String getSummary() {
@@ -102,11 +117,47 @@ public class Game {
         this.url = url;
     }
 
-    public int getGameType() {
+    public Integer getGameType() {
         return gameType;
     }
 
     public void setGameType(int gameType) {
+        this.gameType = gameType;
+    }
+
+    public Integer getIgdbId() {
+        return igdbId;
+    }
+
+    public void setIgdbId(int igdbId) {
+        this.igdbId = igdbId;
+    }
+
+    public Long getFirstReleaseDate() {
+        return firstReleaseDate;
+    }
+
+    public void setFirstReleaseDate(Long firstReleaseDate) {
+        this.firstReleaseDate = firstReleaseDate;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public Integer getReleaseStatus() {
+        return releaseStatus;
+    }
+
+    public void setReleaseStatus(Integer releaseStatus) {
+        this.releaseStatus = releaseStatus;
+    }
+
+    public void setGameType(Integer gameType) {
         this.gameType = gameType;
     }
 
@@ -119,7 +170,14 @@ public class Game {
     }
 
     public List<Platform> getPlatforms() {
+        if (this.platforms == null) {
+            this.platforms = new ArrayList<>();
+        }
         return platforms;
+    }
+
+    public void addPlatform(Platform platform) {
+        getPlatforms().add(platform);
     }
 
     public void setPlatforms(List<Platform> platforms) {
@@ -137,12 +195,12 @@ public class Game {
     @Override
     public String toString() {
         return "Game{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", cover='" + cover + '\'' +
+                "name='" + name + '\'' +
                 ", summary='" + summary + '\'' +
+                ", firstReleaseDate=" + firstReleaseDate +
+                ", rating=" + rating +
                 ", url='" + url + '\'' +
-                ", gameType=" + gameType +
+                ", releaseStatus=" + releaseStatus +
                 '}';
     }
 }

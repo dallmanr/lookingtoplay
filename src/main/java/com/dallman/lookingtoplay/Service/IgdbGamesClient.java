@@ -1,6 +1,6 @@
 package com.dallman.lookingtoplay.Service;
 
-import com.dallman.lookingtoplay.DTO.IgdbResponse;
+import com.dallman.lookingtoplay.DTO.IgdbGame;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
@@ -18,20 +18,21 @@ public class IgdbGamesClient {
         this.igdbApiClient = igdbApiClient;
     }
 
-    public List<IgdbResponse> searchGameName(String gameName) {
+    public List<IgdbGame> searchGameName(String gameName) {
 
-        String bodyParms = String.format("search \"%s\"; fields name, summary, platforms, cover, first_release_date;",
+        String bodyParms = String.format("search \"%s\"; fields name, summary, platforms, cover, first_release_date, status, total_rating, url, game_type;",
                 gameName.replace("\"", "\\\""));
 
-        return igdbApiClient.post("/games", bodyParms, new ParameterizedTypeReference<List<IgdbResponse>>() {});
+        return igdbApiClient.post("/games", bodyParms, new ParameterizedTypeReference<List<IgdbGame>>() {});
     }
 
-    public IgdbResponse findById(int id) {
+    public IgdbGame findById(int id) {
 
-        String bodyParms = String.format("fields name, summary, platforms, cover, first_release_date; where id = %d;", id);
+        String bodyParms = String.format("fields name, summary, platforms, cover, first_release_date, status, total_rating, url, game_type; " +
+                "where id = %d;", id);
 
-        List<IgdbResponse> response = igdbApiClient.post("/games", bodyParms,
-                new ParameterizedTypeReference<List<IgdbResponse>>() {});
+        List<IgdbGame> response = igdbApiClient.post("/games", bodyParms,
+                new ParameterizedTypeReference<List<IgdbGame>>() {});
 
         return response.isEmpty() ? null : response.getFirst();
     }
