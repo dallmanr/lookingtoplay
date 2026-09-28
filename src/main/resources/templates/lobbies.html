@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title th:text="${pageTitle ?: 'Game Lobbies'}">Template</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+        <tr>
+            <th scope="col">Lobby owner</th>
+            <th scope="col">Owner Rating</th>
+            <th scope="col">Platform</th>
+            <th scope="col">Players</th>
+            <th scope="col">Description</th>
+            <th scope="col">Created</th>
+            <th scope="col">Player Count</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- One row per lobby in the "lobbies" model attribute -->
+        <tr th:each="lobby : ${lobbies}">
+            <td th:text="${lobby.owner.username}">Owner</td>
+            <td>
+                <span th:if="${lobby.owner.rating != null}">
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <span th:text="${#numbers.formatDecimal(lobby.owner.rating, 1, 1)}">4.5</span>
+                </span>
+                <span th:unless="${lobby.owner.rating != null}" class="text-muted">N/A</span>
+            </td>
+            <td th:text="${lobby.platform}">PC</td>
+            <td>
+                <span th:each="player, stat : ${lobby.players}">
+                    <span th:text="${player.username}">Player</span><span th:unless="${stat.last}">, </span>
+                </span>
+                <span th:if="${#lists.isEmpty(lobby.players)}" class="text-muted">No players yet</span>
+            </td>
+            <td th:text="${lobby.description}">Description</td>
+            <td th:text="${#temporals.format(lobby.createdAt, 'dd MMM yyyy HH:mm')}">01 Jan 2026 12:00</td>
+            <td th:text="${#lists.size(lobby.players)} + ' / ' + ${lobby.maxPlayers}">2 / 4</td>
+            <td>
+                <span th:if="${#lists.size(lobby.players) >= lobby.maxPlayers}" class="badge text-bg-danger">Full</span>
+                <span th:unless="${#lists.size(lobby.players) >= lobby.maxPlayers}" class="badge text-bg-success">Open</span>
+            </td>
+            <td>
+                <a class="btn btn-sm btn-outline-primary me-1"
+                   th:href="@{/lobbies/{id}/edit(id=${lobby.id})}"
+                   title="Edit lobby">
+                    <i class="bi bi-pencil"></i>
+                </a>
+            </td>
+        </tr>
+
+        <!-- Empty state -->
+        <tr th:if="${#lists.isEmpty(lobbies)}">
+            <td colspan="9" class="text-center text-muted py-4">No lobbies found.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

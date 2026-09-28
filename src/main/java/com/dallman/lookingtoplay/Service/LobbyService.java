@@ -7,6 +7,7 @@ import com.dallman.lookingtoplay.Repository.LobbyRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LobbyService {
@@ -22,19 +23,19 @@ public class LobbyService {
         return lobbyRepository.findById(id).orElse(null);
     }
 
-    public Lobby findByLobbyNameIgnoreCaseAndLobbyStatusOpen(String lobbyName) {
+    public Optional<Lobby> findByLobbyNameIgnoreCaseAndLobbyStatusOpen(String lobbyName) {
         return lobbyRepository.findByLobbyNameIgnoreCaseAndLobbyStatusOPEN(lobbyName, LobbyStatus.OPEN);
     }
 
-    public List<Lobby> findByGameNameIgnoreCase(String lobbyName) {
+    public Optional<List<Lobby>> findByGameNameIgnoreCase(String lobbyName) {
         return lobbyRepository.findByLobbyNameIgnoreCase(lobbyName);
     }
 
-    public List<Lobby> findByGameNameIgnoreCaseOpenOnly(String gameName) {
+    public Optional<List<Lobby>> findByGameNameIgnoreCaseOpenOnly(String gameName) {
         return lobbyRepository.findByGameNameIgnoreCaseAndLobbyStatusOPEN(gameName, LobbyStatus.OPEN);
     }
 
-    public Lobby findByOwnerUserNameIgnoreCaseOpenOnly(String ownerName) {
+    public Optional<Lobby> findByOwnerUserNameIgnoreCaseOpenOnly(String ownerName) {
         return lobbyRepository.findByOwnerNameIgnoreCaseAndLobbyStatusOPEN(ownerName, LobbyStatus.OPEN);
     }
 

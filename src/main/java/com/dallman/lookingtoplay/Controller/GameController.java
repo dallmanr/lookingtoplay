@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class GameController {
@@ -32,6 +33,8 @@ public class GameController {
         this.igdbPlatformsClient = igdbPlatformsClient;
     }
 
+
+    // The landing page - Show all current games in our database
     @RequestMapping("/")
     public String index(Model model) {
         List<Game> games = gameService.findAll();
@@ -39,10 +42,11 @@ public class GameController {
         return "index";
     }
 
+    // Search our games database for a game with the given name
     @GetMapping("/search")
     public String search(Model model, @RequestParam(name="name") String name) {
-        List<Game> games = gameService.findByName(name);
-        if (games == null || games.size() == 0) {
+        Optional<List<Game>> games = gameService.findByName(name);
+        if (!games.isPresent()) {
             model.addAttribute("games", new ArrayList<Game>());
         } else {
             model.addAttribute("games", games);
@@ -50,6 +54,7 @@ public class GameController {
         return "searchgame";
     }
 
+    // When search does not return a game, the user can then search IGDB for the game(s) by that name
     @GetMapping("/addnewgame")
     public String searchForNewGame(@RequestParam(name="name") String name, Model model) {
         List<IgdbGame> response = igdbGamesClient.searchGameName(name);
@@ -59,6 +64,7 @@ public class GameController {
         return "addnewgame";
     }
 
+    // When a user has searched IGDB for a Game to add, they can view the details of it before it gets saved
     @GetMapping("/newgamedetails")
     public String newGameDetails(@RequestParam(name="id") int id, Model model) {
         IgdbGame igdbGame = igdbGamesClient.findById(id);
@@ -72,18 +78,22 @@ public class GameController {
         return "newgamedetails";
     }
 
-    @GetMapping("/viewgamedetails")
-    public String viewGameDetails(@RequestParam(name="id") int id, Model model)  {
+    // For viewing details of already existing games in our database
+    @GetMapping("/viewgamedetails/{id}")
+    public String viewGameDetails(@PathVariable int id, Model model)  {
         Game game = gameService.findById(id);
         model.addAttribute("game", game);
         return "gamedetails";
 
     }
 
+    // This is for saving the Igdb Game to our database. We map the fields the necessary fields and create the relevant platforms,
+    // so long as they do not already exist!
     @PostMapping("/savegame")
     public String saveNewGame(@ModelAttribute IgdbGame igdbGame, @RequestParam(name="platformIds", required=false) List<Integer> platformIds, Model model) {
         Game game = gameService.save(igdbGame,  platformIds);
-        return viewGameDetails(game.getId(), model);
+        model.addAttribute("game", game);
+        return ("redirect:/viewgamedetails/" + game.getId());
     }
 
 }

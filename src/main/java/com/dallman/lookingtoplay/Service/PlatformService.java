@@ -5,6 +5,7 @@ import com.dallman.lookingtoplay.DTO.IgdbPlatform;
 import com.dallman.lookingtoplay.Game.Platform;
 import com.dallman.lookingtoplay.Repository.PlatformRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +22,7 @@ public class PlatformService {
         this.igdbPlatformsClient = igdbPlatformsClient;
     }
 
+    @Transactional
     public List<Platform> findOrCreateByIgdbIds(List<Integer> igdbIds) {
         if (igdbIds == null || igdbIds.isEmpty()) {
             return new ArrayList<>();

@@ -17,7 +17,7 @@ public class Game {
     @Column(name="game_id")
     private int id;
 
-    @Column(name="igdb_id")
+    @Column(name="igdb_id", unique = true)
     @NotNull
     private int igdbId;
 

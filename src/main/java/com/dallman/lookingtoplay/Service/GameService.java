@@ -1,11 +1,13 @@
 package com.dallman.lookingtoplay.Service;
 
 import com.dallman.lookingtoplay.DTO.IgdbGame;
+import com.dallman.lookingtoplay.Exception.GameNotFoundException;
 import com.dallman.lookingtoplay.Game.Game;
 import com.dallman.lookingtoplay.Game.Platform;
 import com.dallman.lookingtoplay.Repository.GameRepository;
 import com.dallman.lookingtoplay.Repository.PlatformRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,12 +31,12 @@ public class GameService {
         return gameRepository.findById(id).orElse(null);
     }
 
-    public Game findByPlatformId(int platformId) {
+    public Optional<Game> findByPlatformId(int platformId) {
         return gameRepository.findByPlatforms(platformId);
     }
 
-    public List<Game> findByName(String name) {
-        List<Game> games = gameRepository.findByNameIgnoreCase(name);
+    public Optional<List<Game>> findByName(String name) {
+        Optional<List<Game>> games = gameRepository.findByNameIgnoreCase(name);
         return games;
     }
 
@@ -43,10 +45,12 @@ public class GameService {
         return games;
     }
 
+    @Transactional
     public Game save(Game game) {
         return gameRepository.save(game);
     }
 
+    @Transactional
     public void deleteById(int id) {
         Optional<Game> result = gameRepository.findById(id);
         Game tempGame = null;
@@ -56,33 +60,25 @@ public class GameService {
         }
     }
 
+    @Transactional
     public Game save(IgdbGame igdbGame, List<Integer> platformIds) {
         if (gameRepository.findByIgdbId(igdbGame.id()).isPresent()) {
-            throw new RuntimeException("Game already exists");
+            throw new GameNotFoundException("Game already exists");
         }
 
-        Game game = gameRepository.findByIgdbId(igdbGame.id())
-                .orElseGet(() -> {
-                    Game newGame = new Game();
-                    newGame.setIgdbId(igdbGame.id());
-                    newGame.setName(igdbGame.name());
-                    newGame.setSummary(igdbGame.summary());
-                    newGame.setFirstReleaseDate(igdbGame.firstReleaseDate());
-                    newGame.setRating(igdbGame.totalRating());
-                    newGame.setCoverId(igdbGame.cover());
-                    newGame.setReleaseStatus(igdbGame.gameStatus());
-                    newGame.setGameType(igdbGame.gameType());
-                    newGame.setUrl(igdbGame.url());
+        Game game = new Game();
+        game.setIgdbId(igdbGame.id());
+        game.setName(igdbGame.name());
+        game.setSummary(igdbGame.summary());
+        game.setFirstReleaseDate(igdbGame.firstReleaseDate());
+        game.setRating(igdbGame.totalRating());
+        game.setCoverId(igdbGame.cover());
+        game.setReleaseStatus(igdbGame.gameStatus());
+        game.setGameType(igdbGame.gameType());
+        game.setUrl(igdbGame.url());
+        game.setPlatforms(platformService.findOrCreateByIgdbIds(platformIds));
 
-                    return gameRepository.save(newGame);
-                });
 
-        List<Platform> platforms = platformService.findOrCreateByIgdbIds(platformIds);
-        for (Platform platform : platforms) {
-            platform.addGame(game);
-        }
-        platformRespository.saveAll(platforms);
-        game.setPlatforms(platforms);
         return gameRepository.save(game);
     }
 }

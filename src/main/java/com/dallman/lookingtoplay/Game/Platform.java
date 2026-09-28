@@ -1,6 +1,7 @@
 package com.dallman.lookingtoplay.Game;
 
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,8 @@ public class Platform {
     @Column(name="abbreviation")
     private String abbreviation;
 
-    @Column(name="igdb_platform_id")
+    @Column(name="igdb_platform_id", unique = true)
+    @NotNull
     private Integer igdbPlatformId;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,  CascadeType.MERGE, CascadeType.REFRESH})

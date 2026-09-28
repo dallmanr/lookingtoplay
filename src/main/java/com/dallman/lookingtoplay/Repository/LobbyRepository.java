@@ -5,6 +5,7 @@ import com.dallman.lookingtoplay.Lobby.LobbyStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /*
@@ -13,11 +14,11 @@ import java.util.List;
 * */
 public interface LobbyRepository extends JpaRepository<Lobby,Integer> {
 
-    List<Lobby> findByLobbyNameIgnoreCase(String lobbyName);
+    Optional<List<Lobby>> findByLobbyNameIgnoreCase(String lobbyName);
 
-    Lobby findByLobbyNameIgnoreCaseAndLobbyStatusOPEN(String lobbyName, LobbyStatus lobbyStatus);
+    Optional<Lobby> findByLobbyNameIgnoreCaseAndLobbyStatusOPEN(String lobbyName, LobbyStatus lobbyStatus);
 
-    List<Lobby> findByGameNameIgnoreCaseAndLobbyStatusOPEN(String gameName, LobbyStatus lobbyStatus);
+    Optional<List<Lobby>> findByGameNameIgnoreCaseAndLobbyStatusOPEN(String gameName, LobbyStatus lobbyStatus);
 
-    Lobby findByOwnerNameIgnoreCaseAndLobbyStatusOPEN(String ownerName, LobbyStatus lobbyStatus);
+    Optional<Lobby> findByOwnerNameIgnoreCaseAndLobbyStatusOPEN(String ownerName, LobbyStatus lobbyStatus);
 }

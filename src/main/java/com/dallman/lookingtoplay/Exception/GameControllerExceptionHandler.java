@@ -18,4 +18,15 @@ public class GameControllerExceptionHandler {
 
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<GameErrorResponse> handleException(GameAlreadyExistsException exc) {
+        GameErrorResponse error = new GameErrorResponse();
+
+        error.setHttpStatus(HttpStatus.CONFLICT.value());
+        error.setMessage(exc.getMessage());
+        error.setTimestamp(System.currentTimeMillis());
+
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
 }

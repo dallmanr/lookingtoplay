@@ -13,11 +13,11 @@ import java.util.Optional;
  * */
 public interface GameRepository extends JpaRepository<Game, Integer> {
 
-    List<Game> findByNameIgnoreCase(String name);
+    Optional<List<Game>> findByNameIgnoreCase(String name);
 
     List<Game> findAll();
 
-    Game findByPlatforms(int platformId);
+    Optional<Game> findByPlatforms(int platformId);
 
     Optional<Game> findByIgdbId(Integer id);
 }

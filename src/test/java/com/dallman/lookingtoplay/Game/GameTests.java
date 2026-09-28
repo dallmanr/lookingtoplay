@@ -13,19 +13,18 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.ModelAndViewAssert;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.servlet.ModelAndView;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -55,18 +54,6 @@ public class GameTests {
 
     // Find all lobbies for game
 
-    // Create game from IgdbResponse
-
-//    @BeforeAll
-//    public static void setup() {
-//
-//    }
-
-//    @BeforeEach
-//    public void beforeEach() {
-//        System.out.println("Setting up Tests");
-//
-//    }
 
     @AfterEach
     public void afterEach() {
@@ -77,35 +64,29 @@ public class GameTests {
     }
 
     @Test
-    @WithMockUser(username="user", roles = {"USER"}) // Our page requires a user to be logged in so we setup a mock user
-    @DisplayName("Testing creating a game from HTTP Request")
-    public void createGameFromIgdbResponse() throws Exception {
-        System.out.println("Create a game from Igdb Response");
+    @WithMockUser(username = "user", roles = "USER") // Users need to be logged in to save a game so use a mock user
+    @DisplayName("Saving a game from an IGDB response persists it and shows its details")
+    void createGameFromIgdbResponse() throws Exception {
+        // Create our example game from the API response
+        IgdbGame igdbGame = new IgdbGame(0, "Hitman", "Hitman is a stealth game...",
+                1457654400L, 4.5, 113355, 8, "website.com", 1, new ArrayList<>(List.of(1)));
 
-        IgdbGame igdbGame = new IgdbGame(0, "Hitman", "Hitman is a stealth game...", 1457654400L, 4.5, 113355, 8, "website.com", 1, new ArrayList<Integer>());
-        igdbGame.platforms().add(new Integer(1));
-
-        // Our endpoint, /savegame, takes an Igdb Response entity that a user has searched for and selected as the game to add
-        // So when we save the game, we take the igdb response entity, and create a Game entity based on its values
-        // We can pass the igdb response from this test into the content of our post
-        MvcResult mvcResult = this.mockMvc.perform(post("/savegame").with(csrf())// Match my end point!
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(igdbGame)))
-                .andExpect(status().isOk())
+        // Attempt to save the game. A successful save gives us a redirect to /viewgamedetails/{id}
+        // SO we check for the status.is3xxRedirection HTTP status
+        MvcResult result = mockMvc.perform(post("/savegame").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(igdbGame)))
+                .andExpect(status().is3xxRedirection())
                 .andReturn();
 
+        // Now we check if the game has been successfully saved or throw an exception if its missing
+        Game saved = gameRepository.findByIgdbId(igdbGame.id())
+                .orElseThrow(() -> new AssertionError("Game was not saved"));
 
-        ModelAndView mav = mvcResult.getModelAndView();
-        // Once we successfully create the game, the user should be taken to the page to view the details for the given game
-        // From here, they could go on to create a lobby if required
-        ModelAndViewAssert.assertViewName(mav, "gamedetails");
-
-        // The game should have been saved, so check that it exists
-        Optional<Game> verifyGame = gameRepository.findByIgdbId(igdbGame.id());
-        assertNotNull(verifyGame, "Game should not be null");
-        assertNotNull(gameService.findByName(verifyGame.get().getName()), "Game should not be null");
-//        assertIterableEquals(igdbResponse.platforms(),  verifyGame.getPlatforms(), "Platforms should match");
-
+        // Check the game name matches
+        assertEquals("Hitman", saved.getName());
+        // Check that url we end up on is correct '/viewgamedetails/{id}'
+        assertEquals("/viewgamedetails/" + saved.getId(), result.getResponse().getRedirectedUrl());
     }
 
     @Test
