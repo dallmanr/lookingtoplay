@@ -2,6 +2,7 @@ package com.dallman.lookingtoplay.Controller;
 
 import com.dallman.lookingtoplay.DTO.IgdbGame;
 import com.dallman.lookingtoplay.DTO.IgdbPlatform;
+import com.dallman.lookingtoplay.Exception.GameNotFoundException;
 import com.dallman.lookingtoplay.Game.Game;
 import com.dallman.lookingtoplay.Service.GameService;
 import com.dallman.lookingtoplay.Service.IgdbGamesClient;
@@ -12,11 +13,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/games")
 public class GameController {
 
     private GameService gameService;
@@ -79,11 +82,17 @@ public class GameController {
     }
 
     // For viewing details of already existing games in our database
-    @GetMapping("/viewgamedetails/{id}")
-    public String viewGameDetails(@PathVariable int id, Model model)  {
+    @GetMapping("/viewgamedetails")
+    public String viewGameDetails(@RequestParam("id")int id, Model model)  {
         Game game = gameService.findById(id);
-        model.addAttribute("game", game);
-        return "gamedetails";
+        if (game != null) {
+            model.addAttribute("game", game);
+            model.addAttribute("firstReleaseDate", Instant.ofEpochSecond(game.getFirstReleaseDate()));
+        } else {
+            throw new GameNotFoundException("Game with id: " + id + " not found");
+        }
+
+        return "games/viewgamedetails";
 
     }
 

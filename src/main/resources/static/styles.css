@@ -70,6 +70,10 @@
     font-weight: 600;
 }
 
+.btn {
+    text-transform: uppercase;
+}
+
 /* Responsive breakpoints */
 @media (max-width: 1200px) {
     .card-item {

@@ -27,7 +27,7 @@ public class LobbyService {
         return lobbyRepository.findByLobbyNameIgnoreCaseAndLobbyStatusOPEN(lobbyName, LobbyStatus.OPEN);
     }
 
-    public Optional<List<Lobby>> findByGameNameIgnoreCase(String lobbyName) {
+    public Optional<Lobby> findByGameNameIgnoreCase(String lobbyName) {
         return lobbyRepository.findByLobbyNameIgnoreCase(lobbyName);
     }
 

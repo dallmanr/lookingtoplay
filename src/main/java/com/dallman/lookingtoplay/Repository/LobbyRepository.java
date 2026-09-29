@@ -14,7 +14,7 @@ import java.util.Optional;
 * */
 public interface LobbyRepository extends JpaRepository<Lobby,Integer> {
 
-    Optional<List<Lobby>> findByLobbyNameIgnoreCase(String lobbyName);
+    Optional<Lobby> findByLobbyNameIgnoreCase(String lobbyName);
 
     Optional<Lobby> findByLobbyNameIgnoreCaseAndLobbyStatusOPEN(String lobbyName, LobbyStatus lobbyStatus);
 

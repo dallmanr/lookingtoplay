@@ -113,6 +113,11 @@
             </div>
         </div>
     </div>
+    <form class="d-flex" th:action="@{/addnewgame}" method="get">
+        <input type="hidden" name="name" th:value="${param.name}">
+        <button type="submit" class="btn btn-primary ms-2">Add Game
+        </button>
+    </form>
 </main>
 
 <!-- Bootstrap JS Bundle -->

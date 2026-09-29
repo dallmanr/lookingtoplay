@@ -7,12 +7,16 @@ import com.dallman.lookingtoplay.Service.GameService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import tools.jackson.databind.ObjectMapper;
@@ -28,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestPropertySource("/.env.test.properties") // I want to use an in-memory H2 Database for testing, so I don't affect 'prod' data
 public class GameTests {
 
     private static MockHttpServletRequest mockHttpServletRequest;
@@ -35,10 +40,10 @@ public class GameTests {
     @Autowired
     MockMvc mockMvc;
 
-    @Autowired
+    @Mock
     private GameService gameService;
 
-    @Autowired
+    @Mock
     private GameRepository gameRepository;
 
     // Use the ObjectMapper because our /savegame uses @RequestBody which is going to be our IgdbResponse we create a game from
@@ -57,10 +62,7 @@ public class GameTests {
 
     @AfterEach
     public void afterEach() {
-        System.out.println("Teardown Tests");
-
-        // Remove game from db
-        gameService.deleteById(0);
+        gameRepository.deleteAll();
     }
 
     @Test

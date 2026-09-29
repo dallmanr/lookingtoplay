@@ -6,12 +6,14 @@ import com.dallman.lookingtoplay.Service.IgdbOAuthClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
+@TestPropertySource("/.env.test.properties") // I want to use an in-memory H2 Database for testing, so I don't affect 'prod' data
 public class IgdbApiIntegrationTest {
 
     @Autowired
