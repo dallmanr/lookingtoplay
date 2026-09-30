@@ -2,6 +2,7 @@ package com.dallman.lookingtoplay.Controller;
 
 import com.dallman.lookingtoplay.DTO.IgdbGame;
 import com.dallman.lookingtoplay.DTO.IgdbPlatform;
+import com.dallman.lookingtoplay.Exception.GameAlreadyExistsException;
 import com.dallman.lookingtoplay.Exception.GameNotFoundException;
 import com.dallman.lookingtoplay.Game.Game;
 import com.dallman.lookingtoplay.Service.GameService;
@@ -88,10 +89,7 @@ public class GameController {
         if (game != null) {
             model.addAttribute("game", game);
             model.addAttribute("firstReleaseDate", Instant.ofEpochSecond(game.getFirstReleaseDate()));
-        } else {
-            throw new GameNotFoundException("Game with id: " + id + " not found");
         }
-
         return "games/viewgamedetails";
 
     }
@@ -99,9 +97,8 @@ public class GameController {
     // This is for saving the Igdb Game to our database. We map the fields the necessary fields and create the relevant platforms,
     // so long as they do not already exist!
     @PostMapping("/savegame")
-    public String saveNewGame(@ModelAttribute IgdbGame igdbGame, @RequestParam(name="platformIds", required=false) List<Integer> platformIds, Model model) {
+    public String saveNewGame(@RequestBody IgdbGame igdbGame, @RequestParam(name="platformIds", required=false) List<Integer> platformIds, Model model) {
         Game game = gameService.save(igdbGame,  platformIds);
-        model.addAttribute("game", game);
         return ("redirect:/viewgamedetails/" + game.getId());
     }
 

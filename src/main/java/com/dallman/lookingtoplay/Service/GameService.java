@@ -1,6 +1,7 @@
 package com.dallman.lookingtoplay.Service;
 
 import com.dallman.lookingtoplay.DTO.IgdbGame;
+import com.dallman.lookingtoplay.Exception.GameAlreadyExistsException;
 import com.dallman.lookingtoplay.Exception.GameNotFoundException;
 import com.dallman.lookingtoplay.Game.Game;
 import com.dallman.lookingtoplay.Game.Platform;
@@ -63,7 +64,7 @@ public class GameService {
     @Transactional
     public Game save(IgdbGame igdbGame, List<Integer> platformIds) {
         if (gameRepository.findByIgdbId(igdbGame.id()).isPresent()) {
-            throw new GameNotFoundException("Game already exists");
+            throw new GameAlreadyExistsException(String.format("Game with id %d already exists", igdbGame.id()));
         }
 
         Game game = new Game();

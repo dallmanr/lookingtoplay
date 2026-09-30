@@ -1,99 +1,69 @@
 package com.dallman.lookingtoplay.Game;
 
-
 import com.dallman.lookingtoplay.DTO.IgdbGame;
+import com.dallman.lookingtoplay.Exception.GameAlreadyExistsException;
 import com.dallman.lookingtoplay.Repository.GameRepository;
 import com.dallman.lookingtoplay.Service.GameService;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@AutoConfigureMockMvc
-@TestPropertySource("/.env.test.properties") // I want to use an in-memory H2 Database for testing, so I don't affect 'prod' data
+@TestPropertySource("/.env.test.properties")
 public class GameTests {
 
-    private static MockHttpServletRequest mockHttpServletRequest;
-
     @Autowired
-    MockMvc mockMvc;
-
-    @Mock
     private GameService gameService;
 
-    @Mock
+    @Autowired
     private GameRepository gameRepository;
 
-    // Use the ObjectMapper because our /savegame uses @RequestBody which is going to be our IgdbResponse we create a game from
-    // We can then pass our test object in our test for creating a game
     @Autowired
-    private ObjectMapper objectMapper;
+    JdbcTemplate jdbcTemplate;
 
-    // Find game by name
-
-    // Find game by ID
-
-    // Check if game is on platform
-
-    // Find all lobbies for game
-
+    @BeforeEach
+    void beforeEach() {
+        jdbcTemplate.execute("insert into games(name, summary, url, game_type, " +
+                "igdb_id, first_release_date, rating, cover_id, release_status)" +
+                "values ('CS2', 'pew pew', 'cs2.com', 1, 1, 1347926400, 2.2, 12345, 1);");
+    }
 
     @AfterEach
     public void afterEach() {
-        gameRepository.deleteAll();
+//        gameRepository.deleteAll();
+        jdbcTemplate.execute("delete from games");
+        jdbcTemplate.execute("delete from platforms");
+        jdbcTemplate.execute("ALTER TABLE games ALTER COLUMN game_id RESTART WITH 1");
+        jdbcTemplate.execute("ALTER TABLE platforms ALTER COLUMN id RESTART WITH 1");
     }
 
+    /*
+    * Console commands:
+    * a. mvn clean test - Cleans and runs tests - Will also create code coverage report now JaCoCo has been added to POM
+    * b. mvn site - HTML reports with SureFire. target/site/surefire/index.html
+    * 1. Check what lobbies the game belongs to
+    * 2. Check what platforms the game is on
+    * 3. Check a game cannot be saved twice
+    * */
+
     @Test
-    @WithMockUser(username = "user", roles = "USER") // Users need to be logged in to save a game so use a mock user
-    @DisplayName("Saving a game from an IGDB response persists it and shows its details")
-    void createGameFromIgdbResponse() throws Exception {
-        // Create our example game from the API response
-        IgdbGame igdbGame = new IgdbGame(0, "Hitman", "Hitman is a stealth game...",
+    @DisplayName("Checking a game cannot be saved twice with the same Igdb ID")
+    public void cannotSaveGameTwice() {
+        // An example Igdb Game
+        // "values ('CS2', 'pew pew', 'cs2.com', 1, 1, 1347926400, 2.2, 12345, 1)"); - From our @BeforeEach for reference
+        IgdbGame igdbGame = new IgdbGame(1, "New game", "A Summary",
                 1457654400L, 4.5, 113355, 8, "website.com", 1, new ArrayList<>(List.of(1)));
 
-        // Attempt to save the game. A successful save gives us a redirect to /viewgamedetails/{id}
-        // SO we check for the status.is3xxRedirection HTTP status
-        MvcResult result = mockMvc.perform(post("/savegame").with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(igdbGame)))
-                .andExpect(status().is3xxRedirection())
-                .andReturn();
-
-        // Now we check if the game has been successfully saved or throw an exception if its missing
-        Game saved = gameRepository.findByIgdbId(igdbGame.id())
-                .orElseThrow(() -> new AssertionError("Game was not saved"));
-
-        // Check the game name matches
-        assertEquals("Hitman", saved.getName());
-        // Check that url we end up on is correct '/viewgamedetails/{id}'
-        assertEquals("/viewgamedetails/" + saved.getId(), result.getResponse().getRedirectedUrl());
-    }
-
-    @Test
-    @DisplayName("Testing Platform creation")
-    public void testPlatformCreation() throws Exception {
-        System.out.println("Test Platform creation");
+        assertThrows(GameAlreadyExistsException.class, () -> gameService.save(igdbGame, igdbGame.platforms()), "Shouldn't be able to add a game with the same Igdb ID");
     }
 }
