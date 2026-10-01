@@ -16,7 +16,7 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestPropertySource("/.env.test.properties")
@@ -61,9 +61,34 @@ public class GameTests {
     public void cannotSaveGameTwice() {
         // An example Igdb Game
         // "values ('CS2', 'pew pew', 'cs2.com', 1, 1, 1347926400, 2.2, 12345, 1)"); - From our @BeforeEach for reference
-        IgdbGame igdbGame = new IgdbGame(1, "New game", "A Summary",
-                1457654400L, 4.5, 113355, 8, "website.com", 1, new ArrayList<>(List.of(1)));
 
-        assertThrows(GameAlreadyExistsException.class, () -> gameService.save(igdbGame, igdbGame.platforms()), "Shouldn't be able to add a game with the same Igdb ID");
+        IgdbGame duplicateGame = getDuplicateGame();
+        // Trying to add a game with the same ID should throw an exception
+        assertThrows(GameAlreadyExistsException.class, () -> gameService.save(duplicateGame, duplicateGame.platforms()), "Shouldn't be able to add a game with the same Igdb ID");
+
+        // We should only have one game in our db, from the @BeforeEach, so check nothing was actually persisted
+        assertEquals(1, gameRepository.count());
+
+        // Check that we can still insert a unique game
+        IgdbGame uniqueGame = getUniqueGame();
+        assertNotNull(gameService.save(uniqueGame, uniqueGame.platforms()), "Game should not be null");
+        assertEquals(2, gameRepository.count());
     }
+
+    @Test
+    static IgdbGame getDuplicateGame() {
+        IgdbGame igdbGame = new IgdbGame(1, "New game", "A Summary",
+                1457654400L, 4.5, 123456, 2, "website.com", 1, new ArrayList<>(List.of(1)));
+
+        return igdbGame;
+    }
+
+    @Test
+    static IgdbGame getUniqueGame() {
+        IgdbGame igdbGame = new IgdbGame(2, "Another new game", "A Summary for another new game",
+                1457654400L, 2.5, 654321, 3, "website.com", 1, new ArrayList<>(List.of(1)));
+
+        return igdbGame;
+    }
+
 }
