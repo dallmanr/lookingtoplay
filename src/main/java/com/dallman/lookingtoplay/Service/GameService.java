@@ -2,9 +2,7 @@ package com.dallman.lookingtoplay.Service;
 
 import com.dallman.lookingtoplay.DTO.IgdbGame;
 import com.dallman.lookingtoplay.Exception.GameAlreadyExistsException;
-import com.dallman.lookingtoplay.Exception.GameNotFoundException;
 import com.dallman.lookingtoplay.Game.Game;
-import com.dallman.lookingtoplay.Game.Platform;
 import com.dallman.lookingtoplay.Repository.GameRepository;
 import com.dallman.lookingtoplay.Repository.PlatformRepository;
 import org.springframework.stereotype.Service;
@@ -78,7 +76,6 @@ public class GameService {
         game.setGameType(igdbGame.gameType());
         game.setUrl(igdbGame.url());
         game.setPlatforms(platformService.findOrCreateByIgdbIds(platformIds));
-
 
         return gameRepository.save(game);
     }

@@ -15,11 +15,11 @@ public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="game_id")
-    private int id;
+    private Integer id;
 
     @Column(name="igdb_id", unique = true)
     @NotNull
-    private int igdbId;
+    private Integer igdbId;
 
     @Column(name="name")
     @NotNull
@@ -49,7 +49,7 @@ public class Game {
     @OneToMany(mappedBy = "game")
     private List<Lobby> lobbies;
 
-    @ManyToMany(mappedBy="gamesList")
+    @ManyToMany(mappedBy="games")
     private List<Platform> platforms;
 
 
@@ -76,11 +76,11 @@ public class Game {
         this.platforms = platforms;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -129,7 +129,7 @@ public class Game {
         return igdbId;
     }
 
-    public void setIgdbId(int igdbId) {
+    public void setIgdbId(Integer igdbId) {
         this.igdbId = igdbId;
     }
 
@@ -179,15 +179,25 @@ public class Game {
     public void addPlatform(Platform platform) {
         getPlatforms().add(platform);
 
-        if (!platform.getGamesList().contains(this)) {
-            platform.getGamesList().add(this);
+        if (!platform.getGames().contains(this)) {
+            platform.getGames().add(this);
         }
     }
 
     public void removePlatform(Platform platform) {
         getPlatforms().remove(platform);
-        if (platform.getGamesList().contains(this)) {
-            platform.getGamesList().remove(this);
+        if (platform.getGames().contains(this)) {
+            platform.getGames().remove(this);
+        }
+    }
+
+    public void setPlatforms(List<Platform> platforms) {
+        getPlatforms().addAll(platforms);
+
+        for(Platform platform : getPlatforms()) {
+            if(!platform.getGames().contains(this)) {
+                platform.getGames().add(this);
+            }
         }
     }
 
@@ -209,9 +219,5 @@ public class Game {
                 ", url='" + url + '\'' +
                 ", releaseStatus=" + releaseStatus +
                 '}';
-    }
-
-    public void setPlatforms(List<Platform> platforms) {
-        this.platforms = platforms;
     }
 }

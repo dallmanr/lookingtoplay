@@ -29,7 +29,7 @@ public class Platform {
     @JoinTable(name="platform_game",
             joinColumns = @JoinColumn(name="platform_id"),
             inverseJoinColumns = @JoinColumn(name="game_id"))
-    private List<Game> gamesList;
+    private List<Game> games;
 
     public Platform() {
     }
@@ -42,6 +42,13 @@ public class Platform {
         this.igdbPlatformId = igdbPlatformId;
         this.abbreviation = abbreviation;
         this.name = name;
+    }
+
+    public Platform(Integer igdbPlatformId, String abbreviation, String name, List<Game> games) {
+        this.igdbPlatformId = igdbPlatformId;
+        this.abbreviation = abbreviation;
+        this.name = name;
+        this.games = games;
     }
 
     public int getId() {
@@ -76,21 +83,25 @@ public class Platform {
         this.abbreviation = abbreviation;
     }
 
-    public List<Game> getGamesList() {
+    public List<Game> getGames() {
 
-        if (gamesList == null) {
-            gamesList = new ArrayList<Game>();
+        if (games == null) {
+            games = new ArrayList<Game>();
         }
 
-        return gamesList;
+        return games;
     }
 
-    public void setGamesList(List<Game> gamesList) {
-        this.gamesList = gamesList;
+    public void setGames(List<Game> games) {
+        games = getGames();
+        this.games = games;
     }
 
     public void addGame(Game game) {
-        getGamesList().add(game);
+        if (!games.contains(game)) {
+            games.add(game);
+            game.getPlatforms().add(this);
+        }
     }
 
     @Override

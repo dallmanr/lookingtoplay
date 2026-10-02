@@ -2,14 +2,17 @@ package com.dallman.lookingtoplay.Service;
 
 
 import com.dallman.lookingtoplay.DTO.IgdbPlatform;
+import com.dallman.lookingtoplay.Exception.PlatformNotFoundException;
+import com.dallman.lookingtoplay.Game.Game;
 import com.dallman.lookingtoplay.Game.Platform;
 import com.dallman.lookingtoplay.Repository.PlatformRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class PlatformService {
@@ -49,5 +52,51 @@ public class PlatformService {
         }
 
         return result;
+    }
+
+    @Transactional
+    public Platform findOrCreateByPlatformIgdbId(Platform platform) {
+
+        Platform tempPlatform = platformRepository.findById(platform.getIgdbPlatformId())
+                .orElseGet(() -> {
+                    Platform newPlatform = new Platform();
+                    newPlatform.setIgdbPlatformId(platform.getIgdbPlatformId());
+                    newPlatform.setName(platform.getName());
+                    newPlatform.setAbbreviation(platform.getAbbreviation());
+                    return platformRepository.save(newPlatform);
+                });
+
+        return tempPlatform;
+    }
+
+    public Optional<Platform> findByIgdbPlatformId(Integer igdbPlatformId) {
+        return platformRepository.findByIgdbPlatformId(igdbPlatformId);
+    }
+
+    public Optional<Platform> findByPlatformName(String platformName) {
+        return platformRepository.findByNameIgnoreCase(platformName);
+    }
+
+
+    public void addGameToPlatform(Platform platform, Game game)  {
+        // Check the platform exists
+        Optional<Platform> verifyPlatform = Optional.of(platformRepository.findByIgdbPlatformId(platform.getIgdbPlatformId())
+                .orElseGet(() -> {
+                    Platform newPlatform = findOrCreateByPlatformIgdbId(platform);
+                    return newPlatform;
+                }));
+
+        // Check if the game is already present on the platform
+        boolean gameAlreadyOnPlatform = platform.getGames().stream().anyMatch(existingGame -> Objects.equals(existingGame.getId(), game.getId()));
+
+        if (!gameAlreadyOnPlatform) {
+            platform.getGames().add(game);
+            game.getPlatforms().add(platform);
+        }
+    }
+
+    @Transactional
+    public void save(Platform platform) {
+        platformRepository.save(platform);
     }
 }

@@ -2,8 +2,13 @@ package com.dallman.lookingtoplay.Game;
 
 import com.dallman.lookingtoplay.DTO.IgdbGame;
 import com.dallman.lookingtoplay.Exception.GameAlreadyExistsException;
+import com.dallman.lookingtoplay.Exception.PlatformNotFoundException;
 import com.dallman.lookingtoplay.Repository.GameRepository;
+import com.dallman.lookingtoplay.Repository.PlatformRepository;
 import com.dallman.lookingtoplay.Service.GameService;
+import com.dallman.lookingtoplay.Service.PlatformService;
+import jakarta.persistence.EntityManager;
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,9 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,7 +36,16 @@ public class GameTests {
     private GameRepository gameRepository;
 
     @Autowired
+    private PlatformRepository platformRepository;
+
+    @Autowired
+    private PlatformService platformService;
+
+    @Autowired
     JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    EntityManager em;
 
     @BeforeEach
     void beforeEach() {
@@ -40,9 +56,11 @@ public class GameTests {
 
     @AfterEach
     public void afterEach() {
-//        gameRepository.deleteAll();
-        jdbcTemplate.execute("delete from games");
-        jdbcTemplate.execute("delete from platforms");
+        platformRepository.deleteAll();
+        gameRepository.deleteAll();
+
+//        jdbcTemplate.execute("delete from platforms"); // Delete from the joinColumns (association holder) first
+//        jdbcTemplate.execute("delete from games");
         jdbcTemplate.execute("ALTER TABLE games ALTER COLUMN game_id RESTART WITH 1");
         jdbcTemplate.execute("ALTER TABLE platforms ALTER COLUMN id RESTART WITH 1");
     }
@@ -73,6 +91,54 @@ public class GameTests {
         IgdbGame uniqueGame = getUniqueGame();
         assertNotNull(gameService.save(uniqueGame, uniqueGame.platforms()), "Game should not be null");
         assertEquals(2, gameRepository.count());
+    }
+
+    @Test
+    @DisplayName("Adding Platforms to a game")
+    @Transactional
+    public void addPlatformsToGame()  {
+        // Obtain our game from the @BeforeEach
+        Game game = gameService.findById(1);
+
+        // Create a list of new platforms that do not currently exist in the database
+        // findOrCreateByPlatformIgdbId will return the newly created platforms so add these to our saved list
+        List<Platform> saved = new ArrayList<>();
+        for (Platform platform : List.of(
+                new Platform(1, "PC", "Computer"),
+                new Platform(2, "SW", "Nintendo Switch"),
+                new Platform(3, "XBOX", "Xbox"))) {
+            saved.add(platformService.findOrCreateByPlatformIgdbId(platform));
+        }
+
+        // For our newly created and saved platforms, add the game
+        for (Platform platform : saved) {
+            platformService.addGameToPlatform(platform, game);
+        }
+
+        assertEquals(3, platformRepository.count(), "Should still be 3 platforms in the database");
+        assertEquals(1, gameRepository.count(), "Should be 1 game in the database");
+
+        // Clear anything held in memory so that we then check against the saved objects
+        em.flush();
+        em.clear();
+
+        for (Platform platform : saved) {
+            // We check that the game is on the platform using our boolean query
+            assertTrue(platformRepository.existsGameOnPlatform(platform.getId(), game.getId()));
+
+            // We get the platform the game is on
+            Platform found = platformRepository.findByIdWithGames(platform.getId()).orElseThrow();
+            assertTrue(Hibernate.isInitialized(found.getGames()), "fetch join should have loaded games");
+            // The current platform should have just our one game
+            assertEquals(1, found.getGames().size());
+            // The single game on our platform should match our existing game
+            assertEquals(game.getId(), found.getGames().get(0).getId());
+
+            // Check from the game side that the game is also on the platform
+            assertTrue(found.getGames().get(0).getPlatforms().stream()
+                    .anyMatch(p -> p.getId() ==platform.getId()));
+        }
+
     }
 
     @Test
