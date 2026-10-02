@@ -6,6 +6,7 @@ import com.dallman.lookingtoplay.Exception.PlatformNotFoundException;
 import com.dallman.lookingtoplay.Game.Game;
 import com.dallman.lookingtoplay.Game.Platform;
 import com.dallman.lookingtoplay.Repository.PlatformRepository;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,18 +56,18 @@ public class PlatformService {
     }
 
     @Transactional
-    public Platform findOrCreateByPlatformIgdbId(Platform platform) {
+    public Platform findOrCreateByPlatformIgdbId(Platform platform) throws EntityNotFoundException {
+        Optional<Platform> tempPlatform = platformRepository.findById(platform.getIgdbPlatformId());
 
-        Platform tempPlatform = platformRepository.findById(platform.getIgdbPlatformId())
-                .orElseGet(() -> {
-                    Platform newPlatform = new Platform();
-                    newPlatform.setIgdbPlatformId(platform.getIgdbPlatformId());
-                    newPlatform.setName(platform.getName());
-                    newPlatform.setAbbreviation(platform.getAbbreviation());
-                    return platformRepository.save(newPlatform);
-                });
-
-        return tempPlatform;
+        if (tempPlatform.isPresent()) {
+            throw new EntityExistsException("Platform with id " + platform.getIgdbPlatformId() + " already exists");
+        } else {
+            Platform newPlatform = new Platform();
+            newPlatform.setIgdbPlatformId(platform.getIgdbPlatformId());
+            newPlatform.setName(platform.getName());
+            newPlatform.setAbbreviation(platform.getAbbreviation());
+            return platformRepository.save(newPlatform);
+        }
     }
 
     public Optional<Platform> findByIgdbPlatformId(Integer igdbPlatformId) {
@@ -74,7 +75,7 @@ public class PlatformService {
     }
 
     public Optional<Platform> findByPlatformName(String platformName) {
-        return platformRepository.findByNameIgnoreCase(platformName);
+        return platformRepository.findByNameContainingIgnoreCase(platformName);
     }
 
 

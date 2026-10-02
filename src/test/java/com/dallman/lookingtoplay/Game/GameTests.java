@@ -2,7 +2,6 @@ package com.dallman.lookingtoplay.Game;
 
 import com.dallman.lookingtoplay.DTO.IgdbGame;
 import com.dallman.lookingtoplay.Exception.GameAlreadyExistsException;
-import com.dallman.lookingtoplay.Exception.PlatformNotFoundException;
 import com.dallman.lookingtoplay.Repository.GameRepository;
 import com.dallman.lookingtoplay.Repository.PlatformRepository;
 import com.dallman.lookingtoplay.Service.GameService;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -69,9 +67,11 @@ public class GameTests {
     * Console commands:
     * a. mvn clean test - Cleans and runs tests - Will also create code coverage report now JaCoCo has been added to POM
     * b. mvn site - HTML reports with SureFire. target/site/surefire/index.html
+    * assertThrows needs lambda expression ExceptionType.class, () -> method that throws
     * 1. Check what lobbies the game belongs to
     * 2. Check what platforms the game is on
     * 3. Check a game cannot be saved twice
+    * 4. Fuzzy name search
     * */
 
     @Test
@@ -155,6 +155,12 @@ public class GameTests {
                 1457654400L, 2.5, 654321, 3, "website.com", 1, new ArrayList<>(List.of(1)));
 
         return igdbGame;
+    }
+
+    @Test
+    @DisplayName("Find by name containing, ignore case")
+    public void findByNameContainingIgnoreCase() {
+        assertNotNull(gameService.findByName("cs"), "Should return 'CS2'");
     }
 
 }

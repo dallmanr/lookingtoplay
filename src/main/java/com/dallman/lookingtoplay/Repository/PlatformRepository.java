@@ -42,4 +42,6 @@ public interface PlatformRepository extends JpaRepository<Platform, Integer> {
     Optional<Platform> findByIdWithGames(@Param("platformId") Integer platformId);
 
     void deleteById(Integer id);
+
+    Optional<Platform> findByNameContainingIgnoreCase(String name);
 }

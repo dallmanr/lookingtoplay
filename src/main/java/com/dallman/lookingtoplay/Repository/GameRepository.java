@@ -20,4 +20,6 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
     Optional<Game> findByPlatforms(int platformId);
 
     Optional<Game> findByIgdbId(Integer id);
+
+    Optional<Game> findByNameContainingIgnoreCase(String name);
 }
