@@ -27,5 +27,6 @@ To complete but I shall add the resources for:
 | [Thymeleaf](https://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#numbers)                                                 | #numbers utility methods                                                  | IGDB Game ratings are decimals and I only want to display up-to 2 d.p.            |
 | [Baeldung](https://www.baeldung.com/dates-in-thymeleaf)                                                                              | How to work with dates in Thymeleaf                                       | Useful examples for working with and formatting various date formats                     |
 | [Unixtimestamp](https://www.unixtimestamp.com/)                                                                                      | Unix timestamp tools                                                      | Handy for checking timestamps and creating timestamps |
+| [docs.spring.io](https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html)                                            | JPA Query Methods                                                         | The various query types that can be used with JPA|
 | []()                                                                                                                                 | | |
 
