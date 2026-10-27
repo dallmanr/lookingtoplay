@@ -1,7 +1,7 @@
-package com.dallman.lookingtoplay.Lobby;
+package com.dallman.lookingtoplay.lobby;
 
-import com.dallman.lookingtoplay.Game.Game;
-import com.dallman.lookingtoplay.User.User;
+import com.dallman.lookingtoplay.game.Game;
+import com.dallman.lookingtoplay.user.User;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -128,22 +128,6 @@ public class Lobby {
 
     public void setLobbyName(String name) {
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public User getUserOwner() {
-        return userOwner;
-    }
-
-    public void setUserOwner(User userOwner) {
-        this.userOwner = userOwner;
     }
 
     public String getOwnerName() {

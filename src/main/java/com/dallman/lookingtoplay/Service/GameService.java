@@ -1,10 +1,10 @@
-package com.dallman.lookingtoplay.Service;
+package com.dallman.lookingtoplay.service;
 
-import com.dallman.lookingtoplay.DTO.IgdbGame;
-import com.dallman.lookingtoplay.Exception.GameAlreadyExistsException;
-import com.dallman.lookingtoplay.Game.Game;
-import com.dallman.lookingtoplay.Repository.GameRepository;
-import com.dallman.lookingtoplay.Repository.PlatformRepository;
+import com.dallman.lookingtoplay.dto.IgdbGame;
+import com.dallman.lookingtoplay.exception.GameAlreadyExistsException;
+import com.dallman.lookingtoplay.game.Game;
+import com.dallman.lookingtoplay.repository.GameRepository;
+import com.dallman.lookingtoplay.repository.PlatformRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,13 +16,13 @@ public class GameService {
 
     private final GameRepository gameRepository;
 
-    private final PlatformRepository platformRespository;
+    private final PlatformRepository platformRepository;
 
     private final PlatformService platformService;
 
-    public GameService(GameRepository gameRepository, PlatformRepository platformRespository, PlatformService platformService) {
+    public GameService(GameRepository gameRepository, PlatformRepository platformRepository, PlatformService platformService) {
         this.gameRepository = gameRepository;
-        this.platformRespository = platformRespository;
+        this.platformRepository = platformRepository;
         this.platformService = platformService;
     }
 
@@ -35,7 +35,7 @@ public class GameService {
     }
 
     public Optional<List<Game>> findByName(String name) {
-        Optional<List<Game>> games = gameRepository.findByNameIgnoreCase(name);
+        Optional<List<Game>> games = gameRepository.findByNameContainingIgnoreCase(name);
         return games;
     }
 

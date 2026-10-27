@@ -1,4 +1,4 @@
-package com.dallman.lookingtoplay.Service;
+package com.dallman.lookingtoplay.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.HttpStatusCode;

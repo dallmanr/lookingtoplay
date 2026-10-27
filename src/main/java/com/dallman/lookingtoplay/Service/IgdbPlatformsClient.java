@@ -1,6 +1,6 @@
-package com.dallman.lookingtoplay.Service;
+package com.dallman.lookingtoplay.service;
 
-import com.dallman.lookingtoplay.DTO.IgdbPlatform;
+import com.dallman.lookingtoplay.dto.IgdbPlatform;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class IgdbPlatformsClient {
 
     public List<IgdbPlatform> getPlatformInfo(List<Integer> igdbPlatforms) {
         StringBuilder platforms = new StringBuilder();
-        if (platforms.length() == 1) {
+        if (igdbPlatforms.size() == 1) {
             platforms.append(igdbPlatforms.get(0).toString());
         } else {
            for(int i = 0; i < igdbPlatforms.size(); i++) {

@@ -53,7 +53,7 @@
                                 id="summary"
                                 readonly
                                 rows="5"
-                                th:field="${game.summary}"></textarea>
+                                th:text="${game.summary} ?: 'No summary found'"></textarea>
                     </div>
 
                     <!-- Release Date -->
@@ -65,7 +65,7 @@
                                 class="form-control"
                                 id="firstReleaseDate"
                                 readonly
-                                th:value="${#dates.format(firstReleaseDate, 'yyyy-MM-dd')}"
+                                th:value="${firstReleaseDate} ?: 'Release date unknown'"
                                 type="date">
                     </div>
 
@@ -84,7 +84,7 @@
                                 class="form-control"
                                 id="rating"
                                 readonly
-                                th:value="${#numbers.formatDecimal(game.rating, 1,2)}"
+                                th:value="${#numbers.formatDecimal(game.rating, 1,2)} ?: 'Rating not found'"
                                 type="text">
                     </div>
 
@@ -98,7 +98,7 @@
                                 class="form-control"
                                 id="releaseStatus"
                                 readonly
-                                th:field="${game.releaseStatus}"
+                                th:value="${game.releaseStatus} ?: 'Release status unknown'"
                                 type="text">
                     </div>
 
@@ -112,7 +112,7 @@
                                 class="form-control"
                                 id="gameType"
                                 readonly
-                                th:field="${game.gameType}"
+                                th:value="${game.gameType} ?: 'Game type unknown'"
                                 type="text">
                     </div>
 

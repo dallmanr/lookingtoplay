@@ -1,7 +1,6 @@
-package com.dallman.lookingtoplay.Repository;
+package com.dallman.lookingtoplay.repository;
 
-import com.dallman.lookingtoplay.DTO.IgdbGame;
-import com.dallman.lookingtoplay.Game.Game;
+import com.dallman.lookingtoplay.game.Game;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -15,11 +14,9 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
 
     Optional<List<Game>> findByNameIgnoreCase(String name);
 
-    List<Game> findAll();
-
     Optional<Game> findByPlatforms(int platformId);
 
     Optional<Game> findByIgdbId(Integer id);
 
-    Optional<Game> findByNameContainingIgnoreCase(String name);
+    Optional<List<Game>> findByNameContainingIgnoreCase(String name);
 }

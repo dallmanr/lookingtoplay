@@ -1,4 +1,4 @@
-package com.dallman.lookingtoplay.DTO;
+package com.dallman.lookingtoplay.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

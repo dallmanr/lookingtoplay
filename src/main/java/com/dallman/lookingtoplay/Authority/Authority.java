@@ -1,6 +1,6 @@
-package com.dallman.lookingtoplay.Authority;
+package com.dallman.lookingtoplay.authority;
 
-import com.dallman.lookingtoplay.User.User;
+import com.dallman.lookingtoplay.user.User;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,7 +13,7 @@ public class Authority {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "username") // whatever FK column exists in authorities
+    @JoinColumn(name = "username", referencedColumnName = "username") // whatever FK column exists in authorities
     private User user;
 
     @Column(name="authority")

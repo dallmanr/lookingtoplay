@@ -1,7 +1,6 @@
-package com.dallman.lookingtoplay.Repository;
+package com.dallman.lookingtoplay.repository;
 
-import com.dallman.lookingtoplay.Game.Game;
-import com.dallman.lookingtoplay.Game.Platform;
+import com.dallman.lookingtoplay.game.Platform;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,8 +39,6 @@ public interface PlatformRepository extends JpaRepository<Platform, Integer> {
         where p.id = :platformId
     """)
     Optional<Platform> findByIdWithGames(@Param("platformId") Integer platformId);
-
-    void deleteById(Integer id);
 
     Optional<Platform> findByNameContainingIgnoreCase(String name);
 }

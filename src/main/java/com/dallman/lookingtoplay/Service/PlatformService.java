@@ -1,19 +1,16 @@
-package com.dallman.lookingtoplay.Service;
+package com.dallman.lookingtoplay.service;
 
 
-import com.dallman.lookingtoplay.DTO.IgdbPlatform;
-import com.dallman.lookingtoplay.Exception.PlatformNotFoundException;
-import com.dallman.lookingtoplay.Game.Game;
-import com.dallman.lookingtoplay.Game.Platform;
-import com.dallman.lookingtoplay.Repository.PlatformRepository;
+import com.dallman.lookingtoplay.dto.IgdbPlatform;
+import com.dallman.lookingtoplay.game.Game;
+import com.dallman.lookingtoplay.game.Platform;
+import com.dallman.lookingtoplay.repository.PlatformRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class PlatformService {

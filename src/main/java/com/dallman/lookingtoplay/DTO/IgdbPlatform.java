@@ -1,4 +1,4 @@
-package com.dallman.lookingtoplay.DTO;
+package com.dallman.lookingtoplay.dto;
 
 
 public record IgdbPlatform(

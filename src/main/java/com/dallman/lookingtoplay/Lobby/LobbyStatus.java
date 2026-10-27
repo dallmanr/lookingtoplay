@@ -1,4 +1,4 @@
-package com.dallman.lookingtoplay.Lobby;
+package com.dallman.lookingtoplay.lobby;
 
 public enum LobbyStatus {
     OPEN,

@@ -1,7 +1,8 @@
-package com.dallman.lookingtoplay.Game;
+package com.dallman.lookingtoplay.game;
 
 import jakarta.persistence.*;
-import org.antlr.v4.runtime.misc.NotNull;
+import jakarta.validation.constraints.NotNull;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +94,6 @@ public class Platform {
     }
 
     public void setGames(List<Game> games) {
-        games = getGames();
         this.games = games;
     }
 

@@ -1,9 +1,8 @@
-package com.dallman.lookingtoplay.Service;
+package com.dallman.lookingtoplay.service;
 
-
-import com.dallman.lookingtoplay.Lobby.Lobby;
-import com.dallman.lookingtoplay.Lobby.LobbyStatus;
-import com.dallman.lookingtoplay.Repository.LobbyRepository;
+import com.dallman.lookingtoplay.lobby.Lobby;
+import com.dallman.lookingtoplay.lobby.LobbyStatus;
+import com.dallman.lookingtoplay.repository.LobbyRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.Optional;
 public class LobbyService {
 
     private final LobbyRepository lobbyRepository;
-
 
     public LobbyService(LobbyRepository lobbyRepository) {
         this.lobbyRepository = lobbyRepository;

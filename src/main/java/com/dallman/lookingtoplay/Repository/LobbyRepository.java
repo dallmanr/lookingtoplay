@@ -1,7 +1,7 @@
-package com.dallman.lookingtoplay.Repository;
+package com.dallman.lookingtoplay.repository;
 
-import com.dallman.lookingtoplay.Lobby.Lobby;
-import com.dallman.lookingtoplay.Lobby.LobbyStatus;
+import com.dallman.lookingtoplay.lobby.Lobby;
+import com.dallman.lookingtoplay.lobby.LobbyStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

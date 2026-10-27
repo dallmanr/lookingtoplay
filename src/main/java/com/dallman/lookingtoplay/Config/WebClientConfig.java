@@ -1,4 +1,4 @@
-package com.dallman.lookingtoplay.Config;
+package com.dallman.lookingtoplay.config;
 
 
 import org.springframework.context.annotation.Bean;

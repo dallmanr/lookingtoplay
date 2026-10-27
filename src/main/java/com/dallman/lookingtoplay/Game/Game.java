@@ -1,9 +1,10 @@
-package com.dallman.lookingtoplay.Game;
+package com.dallman.lookingtoplay.game;
 
 
-import com.dallman.lookingtoplay.Lobby.Lobby;
+import com.dallman.lookingtoplay.lobby.Lobby;
 import jakarta.persistence.*;
-import org.antlr.v4.runtime.misc.NotNull;
+import jakarta.validation.constraints.NotNull;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +75,18 @@ public class Game {
         this.releaseStatus = releaseStatus;
         this.gameType = gameType;
         this.platforms = platforms;
+    }
+
+    public Game(int igdbId, String name, Integer coverId, String summary, Long firstReleaseDate, Double rating, String url, Integer releaseStatus, Integer gameType) {
+        this.igdbId = igdbId;
+        this.name = name;
+        this.coverId = coverId;
+        this.summary = summary;
+        this.firstReleaseDate = firstReleaseDate;
+        this.rating = rating;
+        this.url = url;
+        this.releaseStatus = releaseStatus;
+        this.gameType = gameType;
     }
 
     public Integer getId() {
@@ -202,11 +215,10 @@ public class Game {
     }
 
     public Platform findPlatformById(int id) {
-        if (this.getPlatforms().contains(id)) {
-            return this.getPlatforms().stream().filter(p -> p.getId() == id).findFirst().get();
-        } else  {
-            return null;
-        }
+        return this.getPlatforms().stream()
+                .filter(p -> p.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

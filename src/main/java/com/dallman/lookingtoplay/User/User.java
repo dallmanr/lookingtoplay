@@ -1,10 +1,12 @@
-package com.dallman.lookingtoplay.User;
+package com.dallman.lookingtoplay.user;
 
-import com.dallman.lookingtoplay.Authority.Authority;
-import com.dallman.lookingtoplay.Lobby.Lobby;
+import com.dallman.lookingtoplay.authority.Authority;
+import com.dallman.lookingtoplay.lobby.Lobby;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 @Entity
@@ -19,11 +21,17 @@ public class User {
     @Column(name="username", nullable = false, length = 50)
     private String username;
 
+    @Column(name="first_name", nullable = false, length = 50)
+    private String firstName;
+
+    @Column(name="last_name", nullable = false, length = 50)
+    private String lastName;
+
     @Column(name = "password")
     private String password;
 
     @Column(name = "enabled")
-    private int enabled;
+    private boolean enabled;
 
     @Column(name="email_address")
     private String emailAddress;
@@ -36,20 +44,21 @@ public class User {
     private List<Lobby> joinedLobbies;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Collection<Authority> roles;
+    private Collection<Authority> authorities;
 
-    public User(String username, String password, int enabled, String emailAddress) {
+    public User(String username, String password, boolean enabled, String emailAddress) {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
         this.emailAddress = emailAddress;
+        this.authorities = new HashSet<Authority>();
     }
 
-    public User(String username, String password, int enabled, Collection<Authority> roles) {
+    public User(String username, String password, boolean enabled, Collection<Authority> authorities) {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
-        this.roles = roles;
+        this.authorities = authorities;
     }
 
     public User() {
@@ -63,6 +72,22 @@ public class User {
         this.username = username;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -71,20 +96,20 @@ public class User {
         this.password = password;
     }
 
-    public int getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(int enabled) {
-        this.enabled = enabled;
-    }
-
     public String getEmailAddress() {
         return emailAddress;
     }
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public List<Lobby> getOwnedLobbies() {
@@ -103,12 +128,12 @@ public class User {
         this.joinedLobbies = joinedLobbies;
     }
 
-    public Collection<Authority> getRoles() {
-        return roles;
+    public void setAuthorities(Collection<Authority> authorities) {
+        this.authorities = authorities;
     }
 
-    public void setRoles(Collection<Authority> roles) {
-        this.roles = roles;
+    public Collection<Authority> getAuthorities() {
+        return authorities;
     }
 
     public int getId() {
@@ -118,4 +143,5 @@ public class User {
     public void setId(int id) {
         this.id = id;
     }
+
 }

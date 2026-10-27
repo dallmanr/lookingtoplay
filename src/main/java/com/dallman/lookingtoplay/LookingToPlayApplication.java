@@ -1,6 +1,6 @@
 package com.dallman.lookingtoplay;
 
-import com.dallman.lookingtoplay.Service.IgdbApiProperties;
+import com.dallman.lookingtoplay.service.IgdbApiProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

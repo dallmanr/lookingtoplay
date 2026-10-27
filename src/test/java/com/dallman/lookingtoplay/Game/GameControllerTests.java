@@ -1,10 +1,9 @@
-package com.dallman.lookingtoplay.Game;
+package com.dallman.lookingtoplay.game;
 
 
-import com.dallman.lookingtoplay.DTO.IgdbGame;
-import com.dallman.lookingtoplay.Exception.GameAlreadyExistsException;
-import com.dallman.lookingtoplay.Repository.GameRepository;
-import com.dallman.lookingtoplay.Service.GameService;
+import com.dallman.lookingtoplay.dto.IgdbGame;
+import com.dallman.lookingtoplay.repository.GameRepository;
+import com.dallman.lookingtoplay.service.GameService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +19,6 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

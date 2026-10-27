@@ -1,7 +1,6 @@
-package com.dallman.lookingtoplay.Exception;
+package com.dallman.lookingtoplay.exception;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,7 +16,7 @@ public class GameControllerExceptionHandler {
 
     @ExceptionHandler
     public String handleExceptionGameNotFoundException(GameNotFoundException exc, Model model) {
-        model.addAttribute("error", exc.getMessage());
+
 
         GameErrorResponse error = new GameErrorResponse();
 
@@ -25,6 +24,7 @@ public class GameControllerExceptionHandler {
         error.setMessage(exc.getMessage());
         error.setTimestamp(System.currentTimeMillis());
 
+        model.addAttribute("errorResponse", error);
         return "error";
     }
 

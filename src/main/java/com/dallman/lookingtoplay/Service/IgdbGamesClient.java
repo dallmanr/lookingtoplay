@@ -1,6 +1,6 @@
-package com.dallman.lookingtoplay.Service;
+package com.dallman.lookingtoplay.service;
 
-import com.dallman.lookingtoplay.DTO.IgdbGame;
+import com.dallman.lookingtoplay.dto.IgdbGame;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 

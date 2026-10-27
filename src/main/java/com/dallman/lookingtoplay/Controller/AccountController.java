@@ -1,4 +1,4 @@
-package com.dallman.lookingtoplay.Controller;
+package com.dallman.lookingtoplay.controller;
 
 import org.springframework.stereotype.Controller;
 

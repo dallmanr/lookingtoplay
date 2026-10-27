@@ -1,6 +1,6 @@
-package com.dallman.lookingtoplay.Exception;
+package com.dallman.lookingtoplay.exception;
 
-public class PlatformNotFoundException extends Exception {
+public class PlatformNotFoundException extends RuntimeException {
     public PlatformNotFoundException(String message) {
         super(message);
     }

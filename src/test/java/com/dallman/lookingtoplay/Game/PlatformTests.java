@@ -1,10 +1,10 @@
-package com.dallman.lookingtoplay.Game;
+package com.dallman.lookingtoplay.game;
 
 
-import com.dallman.lookingtoplay.Repository.GameRepository;
-import com.dallman.lookingtoplay.Repository.PlatformRepository;
-import com.dallman.lookingtoplay.Service.GameService;
-import com.dallman.lookingtoplay.Service.PlatformService;
+import com.dallman.lookingtoplay.repository.GameRepository;
+import com.dallman.lookingtoplay.repository.PlatformRepository;
+import com.dallman.lookingtoplay.service.GameService;
+import com.dallman.lookingtoplay.service.PlatformService;
 import jakarta.persistence.EntityExistsException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,8 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestPropertySource("/.env.test.properties")
@@ -83,7 +82,6 @@ public class PlatformTests {
     @DisplayName("Search by name containing and ignoring casing")
     @Transactional
     public void findByNameContainingIgnoreCase() {
-        assertNotNull(gameService.findByName("one"), "Should return 'Game One'");
-        assertNotNull(gameService.findByName("two"), "Should return 'Game two'");
+        assertNotNull(platformService.findByPlatformName("comp"), "Should return 'Computer'");
     }
 }

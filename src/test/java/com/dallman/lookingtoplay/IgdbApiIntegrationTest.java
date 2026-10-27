@@ -1,8 +1,8 @@
 package com.dallman.lookingtoplay;
 
-import com.dallman.lookingtoplay.DTO.IgdbGame;
-import com.dallman.lookingtoplay.Service.IgdbGamesClient;
-import com.dallman.lookingtoplay.Service.IgdbOAuthClient;
+import com.dallman.lookingtoplay.dto.IgdbGame;
+import com.dallman.lookingtoplay.service.IgdbGamesClient;
+import com.dallman.lookingtoplay.service.IgdbOAuthClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

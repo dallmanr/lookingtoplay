@@ -1,11 +1,11 @@
-package com.dallman.lookingtoplay.Game;
+package com.dallman.lookingtoplay.game;
 
-import com.dallman.lookingtoplay.DTO.IgdbGame;
-import com.dallman.lookingtoplay.Exception.GameAlreadyExistsException;
-import com.dallman.lookingtoplay.Repository.GameRepository;
-import com.dallman.lookingtoplay.Repository.PlatformRepository;
-import com.dallman.lookingtoplay.Service.GameService;
-import com.dallman.lookingtoplay.Service.PlatformService;
+import com.dallman.lookingtoplay.dto.IgdbGame;
+import com.dallman.lookingtoplay.exception.GameAlreadyExistsException;
+import com.dallman.lookingtoplay.repository.GameRepository;
+import com.dallman.lookingtoplay.repository.PlatformRepository;
+import com.dallman.lookingtoplay.service.GameService;
+import com.dallman.lookingtoplay.service.PlatformService;
 import jakarta.persistence.EntityManager;
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.AfterEach;
@@ -50,6 +50,11 @@ public class GameTests {
         jdbcTemplate.execute("insert into games(name, summary, url, game_type, " +
                 "igdb_id, first_release_date, rating, cover_id, release_status)" +
                 "values ('CS2', 'pew pew', 'cs2.com', 1, 1, 1347926400, 2.2, 12345, 1);");
+
+        Game gameOne = new Game(2,"Game one", 1,"Game summary", 1L, 1.0, "www.website.com", 1, 1);
+        Game gameTwo = new Game(3,"Game Two", 2,"Game summary", 2L, 2.0, "www.website.com", 2, 2);
+        gameRepository.save(gameOne);
+        gameRepository.save(gameTwo);
     }
 
     @AfterEach
@@ -161,6 +166,7 @@ public class GameTests {
     @DisplayName("Find by name containing, ignore case")
     public void findByNameContainingIgnoreCase() {
         assertNotNull(gameService.findByName("cs"), "Should return 'CS2'");
+        assertEquals(2, gameService.findByName("game"), "Should return 'Game one' & 'Game two'");
     }
 
 }

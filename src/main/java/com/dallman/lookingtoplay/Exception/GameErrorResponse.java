@@ -1,4 +1,4 @@
-package com.dallman.lookingtoplay.Exception;
+package com.dallman.lookingtoplay.exception;
 
 
 public class GameErrorResponse {

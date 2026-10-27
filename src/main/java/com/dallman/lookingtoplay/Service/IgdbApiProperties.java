@@ -1,4 +1,4 @@
-package com.dallman.lookingtoplay.Service;
+package com.dallman.lookingtoplay.service;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

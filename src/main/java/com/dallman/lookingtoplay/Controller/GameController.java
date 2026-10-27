@@ -1,14 +1,12 @@
-package com.dallman.lookingtoplay.Controller;
+package com.dallman.lookingtoplay.controller;
 
-import com.dallman.lookingtoplay.DTO.IgdbGame;
-import com.dallman.lookingtoplay.DTO.IgdbPlatform;
-import com.dallman.lookingtoplay.Exception.GameAlreadyExistsException;
-import com.dallman.lookingtoplay.Exception.GameNotFoundException;
-import com.dallman.lookingtoplay.Game.Game;
-import com.dallman.lookingtoplay.Service.GameService;
-import com.dallman.lookingtoplay.Service.IgdbGamesClient;
-import com.dallman.lookingtoplay.Service.IgdbPlatformsClient;
-import com.dallman.lookingtoplay.Service.PlatformService;
+import com.dallman.lookingtoplay.dto.IgdbGame;
+import com.dallman.lookingtoplay.dto.IgdbPlatform;
+import com.dallman.lookingtoplay.game.Game;
+import com.dallman.lookingtoplay.service.GameService;
+import com.dallman.lookingtoplay.service.IgdbGamesClient;
+import com.dallman.lookingtoplay.service.IgdbPlatformsClient;
+import com.dallman.lookingtoplay.service.PlatformService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,19 +51,19 @@ public class GameController {
         if (!games.isPresent()) {
             model.addAttribute("games", new ArrayList<Game>());
         } else {
-            model.addAttribute("games", games);
+            model.addAttribute("games", games.get());
         }
-        return "searchgame";
+        return "/games/searchgame";
     }
 
     // When search does not return a game, the user can then search IGDB for the game(s) by that name
     @GetMapping("/addnewgame")
     public String searchForNewGame(@RequestParam(name="name") String name, Model model) {
         List<IgdbGame> response = igdbGamesClient.searchGameName(name);
-        if  (response != null || response.size() != 0) {
+        if  (response != null && !response.isEmpty()) {
             model.addAttribute("response", response);
         }
-        return "addnewgame";
+        return "/games/addnewgame";
     }
 
     // When a user has searched IGDB for a Game to add, they can view the details of it before it gets saved
@@ -75,11 +73,11 @@ public class GameController {
         if (igdbGame != null) {
             model.addAttribute("igdbGame", igdbGame);
             List<IgdbPlatform> platforms = igdbPlatformsClient.getPlatformInfo(igdbGame.platforms());
-            if (platforms != null || platforms.size() != 0) {
+            if (platforms != null && !platforms.isEmpty()) {
                 model.addAttribute("platforms", platforms);
             }
         }
-        return "newgamedetails";
+        return "/games/newgamedetails";
     }
 
     // For viewing details of already existing games in our database
@@ -88,16 +86,18 @@ public class GameController {
         Game game = gameService.findById(id);
         if (game != null) {
             model.addAttribute("game", game);
-            model.addAttribute("firstReleaseDate", Instant.ofEpochSecond(game.getFirstReleaseDate()));
+            Long epochSeconds  = game.getFirstReleaseDate();
+            String firstReleaseDate = epochSeconds == null ? "?" : epochSeconds.toString();
+            model.addAttribute("firstReleaseDate", firstReleaseDate);
         }
-        return "games/viewgamedetails";
+        return "/games/viewgamedetails";
 
     }
 
     // This is for saving the Igdb Game to our database. We map the fields the necessary fields and create the relevant platforms,
     // so long as they do not already exist!
     @PostMapping("/savegame")
-    public String saveNewGame(@RequestBody IgdbGame igdbGame, @RequestParam(name="platformIds", required=false) List<Integer> platformIds, Model model) {
+    public String saveNewGame(@ModelAttribute IgdbGame igdbGame, @RequestParam(name="platformIds", required=false) List<Integer> platformIds, Model model) {
         Game game = gameService.save(igdbGame,  platformIds);
         return ("redirect:/viewgamedetails/" + game.getId());
     }
